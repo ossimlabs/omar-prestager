@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: omar.prestager
+testFramework: spock
+sourceLanguage: groovy
+buildTool: gradle
+features: [app-name, docker, file-watch, gradle, groovy, groovy-application, http-client, jib, kubernetes, logback, management, netty-server, openapi, postgres, readme, spock, testcontainers, yaml]

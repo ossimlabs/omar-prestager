@@ -1,0 +1,15 @@
+apiVersion: skaffold/v2beta7
+kind: Config
+metadata:
+  name: omar-prestager
+build:
+  artifacts:
+  - image: chimera/omar-prestager
+    jib: {}
+deploy:
+  helm:
+    releases:
+    - name: omar-prestager
+      chartPath: chart
+      artifactOverrides:
+        image: chimera/omar-prestager

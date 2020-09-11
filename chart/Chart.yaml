@@ -1,0 +1,4 @@
+apiVersion: v1
+description: OMAR Pre Stager - local creation of hisogram and reduced res sets that are synched with remote image
+name: omar-prestager
+version: 0.0.1
