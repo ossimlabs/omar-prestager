@@ -21,3 +21,12 @@
 - [Micronaut Kubernetes Support documentation](https://micronaut-projects.github.io/micronaut-kubernetes/latest/guide/index.html)
 
 - [https://kubernetes.io/docs/home/](https://kubernetes.io/docs/home/)
+
+## Feature data-jdbc documentation
+
+- [Micronaut Micronaut Data JDBC documentation](https://micronaut-projects.github.io/micronaut-data/latest/guide/index.html#jdbc)
+
+## Feature jdbc-hikari documentation
+
+- [Micronaut Hikari JDBC Connection Pool documentation](https://micronaut-projects.github.io/micronaut-sql/latest/guide/index.html#jdbc)
+

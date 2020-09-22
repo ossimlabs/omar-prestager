@@ -1,6 +1,8 @@
 package omar.prestager
 
 import groovy.transform.CompileStatic
+import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.QueryValue
@@ -16,9 +18,15 @@ class PrestageController {
     this.ossimService = ossimService
   }
 
-  @ExecuteOn( TaskExecutors.IO)
+  @ExecuteOn( TaskExecutors.IO )
   @Post( uri = "/processFile", produces = "text/plain" )
   String processFile( @QueryValue String filename ) {
     ossimService.processFile( new File( filename ) )
+  }
+
+  @ExecuteOn( TaskExecutors.IO )
+  @Post( uri = "/queueFile", produces = MediaType.APPLICATION_JSON )
+  ImageFile queueFile(  @QueryValue String filename  ) {
+    ossimService.queueFile( new ImageFile(filename: filename) )
   }
 }

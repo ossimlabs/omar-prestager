@@ -15,3 +15,20 @@ micronaut:
       swagger-ui:
         paths: classpath:META-INF/swagger/views/swagger-ui
         mapping: /swagger-ui/**
+
+datasources:
+  default:
+    url: jdbc:postgresql:omardb-prestager
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    schema-generate: CREATE_DROP
+    dialect: POSTGRES
+
+omar:
+  prestager:
+    process:
+      pollEvery: '1s'
+    index:
+      stagerAdress:  http://localhost/omar-services
+      cron: '* * * * *'
