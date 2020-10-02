@@ -15,10 +15,12 @@ micronaut:
       swagger-ui:
         paths: classpath:META-INF/swagger/views/swagger-ui
         mapping: /swagger-ui/**
-
+#  server:
+#    port: 8888
 datasources:
   default:
-    url: jdbc:postgresql:omardb-prestager
+#    url: jdbc:postgresql:omardb-prestager
+    url: jdbc:postgresql://host.docker.internal/omardb-prestager
     driverClassName: org.postgresql.Driver
     username: postgres
     password: postgres
@@ -30,5 +32,6 @@ omar:
     process:
       pollEvery: '1s'
     index:
-      stagerAdress:  http://localhost/omar-services
+#      stagerAdress:  http://localhost/omar-services
+      stagerAdress:  http://host.docker.internal/omar-services
       cron: '* * * * *'

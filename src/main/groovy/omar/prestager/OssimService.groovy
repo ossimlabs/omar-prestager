@@ -85,7 +85,7 @@ class OssimService {
   }
 
   @Transactional
-  @Scheduled( fixedRate = '${omar.prestager.process.cron}' )
+  @Scheduled( fixedRate = '${omar.prestager.process.pollEvery}' )
   void findWork() {
     ImageFile imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.QUEUED.toString() ).orElse( null )
 

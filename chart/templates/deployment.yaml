@@ -42,3 +42,4 @@ spec:
       - name: input
         hostPath:
           path: /System/Volumes/Data/ossim
+
