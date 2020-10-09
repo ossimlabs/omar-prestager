@@ -1,3 +1,11 @@
+## Feature config-kubernetes documentation
+
+- [Micronaut Kubernetes Distributed Configuration documentation](https://micronaut-projects.github.io/micronaut-kubernetes/latest/guide/index.html)
+
+## Feature management documentation
+
+- [Micronaut Micronaut Management documentation](https://docs.micronaut.io/latest/guide/index.html#management)
+
 ## Feature testcontainers documentation
 
 - [https://www.testcontainers.org/](https://www.testcontainers.org/)

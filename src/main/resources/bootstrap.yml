@@ -1,0 +1,5 @@
+micronaut:
+  application:
+    name: omar-prestager
+  config-client:
+    enabled: true

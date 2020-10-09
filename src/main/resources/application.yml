@@ -1,6 +1,6 @@
 micronaut:
   application:
-    name: omarPrestager
+    name: omar-prestager
   router:
     static-resources:
       swagger:
@@ -19,16 +19,22 @@ micronaut:
 #    port: 8888
 datasources:
   default:
-#    url: jdbc:postgresql:omardb-prestager
-    url: jdbc:postgresql://host.docker.internal/omardb-prestager
+    url: jdbc:postgresql://${omar.prestager.database.host}/${omar.prestager.database.name}
     driverClassName: org.postgresql.Driver
-    username: postgres
-    password: postgres
-    schema-generate: CREATE_DROP
+    username: ${omar.prestager.database.username}
+    password: ${omar.prestager.database.password}
+#    schema-generate: CREATE_DROP
+    schema-generate: CREATE
     dialect: POSTGRES
 
 omar:
   prestager:
+    database:
+      name: omardb-prestager
+      username: postgres
+      password: postgres
+      host: host.docker.internal
+      port: 5432
     process:
       pollEvery: '1s'
     index:

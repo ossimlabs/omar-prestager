@@ -33,13 +33,18 @@ spec:
         volumeMounts:
         - mountPath: /scratch
           name: scratch-volume
-        - mountPath: /System/Volumes/Data/ossim
-          name: input
+#        - mountPath: /System/Volumes/Data/ossim
+#          name: input
+        - mountPath: /data
+          name: ossim-data
 
       volumes:
       - name: scratch-volume
         emptyDir: {}
-      - name: input
-        hostPath:
-          path: /System/Volumes/Data/ossim
+#      - name: input
+#        hostPath:
+#          path: /System/Volumes/Data/ossim
+      - name: ossim-data
+        persistentVolumeClaim:
+          claimName: {{ .Values.global.storage.pvc.name }}
 
