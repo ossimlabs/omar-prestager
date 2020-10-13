@@ -7,15 +7,16 @@ global:
   storage:
     pvc:
       name: omar-oms-ossim-data-pvc
-  namespace: omar-dev
-  ingress:
-    host: omar-prestager.ossim.io
-    loadBalancer: aaac6bc42260c4b60a9e580e4febc19f-e69fe95399e829a2.elb.us-east-1.amazonaws.com
+#  namespace: omar-dev
+  namespace: omar-3pa-dev
+#  ingress:
+#    host: omar-prestager.ossim.io
+#    loadBalancer: aaac6bc42260c4b60a9e580e4febc19f-e69fe95399e829a2.elb.us-east-1.amazonaws.com
   database:
     name: o2_omar_db
     username: postgres
-    password: vME7B9RWivNqBkgfz5N9
-    host: gsp-dev-omar.cfussmnw2zzg.us-east-1.rds.amazonaws.com
+    password: 'qKcSn=3G|3~54*gO'
+    host: omar-3pa-dev-aurora-rdsdbcluster-nzw5yqvz2wso.cluster-cfussmnw2zzg.us-east-1.rds.amazonaws.com
     port: 5432
   resources:
     limits:

@@ -35,16 +35,36 @@ spec:
           name: scratch-volume
 #        - mountPath: /System/Volumes/Data/ossim
 #          name: input
+#        - mountPath: /data
+#          name: ossim-data
         - mountPath: /data
           name: ossim-data
-
+        - mountPath: /maxar-blacksky-data
+          name: maxar-blacksky-data
+        - mountPath: /maxar-skysat-data
+          name: maxar-skysat-data
+        - mountPath: /gegd-dem-tiled
+          name: gegd-dem-tiled
       volumes:
       - name: scratch-volume
         emptyDir: {}
 #      - name: input
 #        hostPath:
 #          path: /System/Volumes/Data/ossim
+#      - name: ossim-data
+#        persistentVolumeClaim:
+#          claimName: {{ .Values.global.storage.pvc.name }}
       - name: ossim-data
         persistentVolumeClaim:
-          claimName: {{ .Values.global.storage.pvc.name }}
+          claimName: omar-oms-ossim-data-pvc
+      - name: maxar-blacksky-data
+        persistentVolumeClaim:
+          claimName: omar-oms-maxar-blacksky-data-pvc
+      - name: maxar-skysat-data
+        persistentVolumeClaim:
+          claimName: omar-oms-maxar-skysat-data-pvc
+      - name: gegd-dem-tiled
+        persistentVolumeClaim:
+          claimName: omar-wms-lite-gegd-dem-tiled-pvc
+
 
