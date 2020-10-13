@@ -16,7 +16,7 @@ spec:
       containers:
         - name:  {{ .Values.appName }}
           env:
-          {{- include "unzip-and-ingest.envVars" . | indent 8 }}
+          {{- include "omar-prestager.envVars" . | indent 8 }}
           {{- if .Values.imageSkaffoldOverride }}
           image: {{ .Values.imageSkaffoldOverride }}
           {{- else }}
@@ -46,8 +46,15 @@ spec:
           ports:
             - containerPort: {{ .Values.internalPort }}
               protocol: TCP
+          resources:
+            limits:
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}              
           volumeMounts:
-{{- include "unzip-and-ingest.volumeMounts" . | indent 12 }}
+{{- include "omar-prestager.volumeMounts" . | indent 12 }}
       dnsPolicy: ClusterFirst
         {{- if .Values.global.useImagePullSecret }}
       imagePullSecrets:
@@ -57,4 +64,4 @@ spec:
       securityContext: {}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       volumes:
-{{- include "unzip-and-ingest.volumes" . | indent 8 }}
+{{- include "omar-prestager.volumes" . | indent 8 }}

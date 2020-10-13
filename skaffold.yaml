@@ -11,5 +11,11 @@ deploy:
     releases:
     - name: omar-prestager
       chartPath: chart
+      valuesFiles:
+        - chart/values-dev.yaml
+      # This override is used to pass skaffold's rebuilt image to
+      # imageName in the helm chart deployment.yaml.
+      # If you want to use an existing image rather than skaffold's
+      # comment this out and specify the image in the values-dev.yaml
       artifactOverrides:
-        image: nexus-docker-public-hosted.ossim.io/omar-prestager
+        imageSkaffoldOverride: nexus-docker-public-hosted.ossim.io/omar-prestager       
