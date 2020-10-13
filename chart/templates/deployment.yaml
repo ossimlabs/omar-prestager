@@ -1,70 +1,60 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  labels: {}
+  name: {{ .Values.appName }}
 spec:
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: {{ .Values.appName }}
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: {{ .Values.appName }}
     spec:
       containers:
-      - name: {{ .Chart.Name }}
-        image: {{ .Values.image }}
-        ports:
-        - name: http
-          containerPort: 8080
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 5
-          timeoutSeconds: 3
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 10
-        volumeMounts:
-        - mountPath: /scratch
-          name: scratch-volume
-#        - mountPath: /System/Volumes/Data/ossim
-#          name: input
-#        - mountPath: /data
-#          name: ossim-data
-        - mountPath: /data
-          name: ossim-data
-        - mountPath: /maxar-blacksky-data
-          name: maxar-blacksky-data
-        - mountPath: /maxar-skysat-data
-          name: maxar-skysat-data
-        - mountPath: /gegd-dem-tiled
-          name: gegd-dem-tiled
+        - name:  {{ .Values.appName }}
+          env:
+          {{- include "unzip-and-ingest.envVars" . | indent 8 }}
+          {{- if .Values.imageSkaffoldOverride }}
+          image: {{ .Values.imageSkaffoldOverride }}
+          {{- else }}
+          image: "{{ .Values.global.dockerRepository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          {{- end }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          livenessProbe:
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            httpGet:
+              path: {{ .Values.livenessProbe.path }}
+              port: {{ .Values.livenessProbe.port }}
+              scheme: HTTP
+          readinessProbe:
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            httpGet:
+              path: {{ .Values.readinessProbe.path }}
+              port: {{ .Values.readinessProbe.port }}
+              scheme: HTTP
+          ports:
+            - containerPort: {{ .Values.internalPort }}
+              protocol: TCP
+          volumeMounts:
+{{- include "unzip-and-ingest.volumeMounts" . | indent 12 }}
+      dnsPolicy: ClusterFirst
+        {{- if .Values.global.useImagePullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.appName }}-pull-secret
+        {{- end }}
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       volumes:
-      - name: scratch-volume
-        emptyDir: {}
-#      - name: input
-#        hostPath:
-#          path: /System/Volumes/Data/ossim
-#      - name: ossim-data
-#        persistentVolumeClaim:
-#          claimName: {{ .Values.global.storage.pvc.name }}
-      - name: ossim-data
-        persistentVolumeClaim:
-          claimName: omar-oms-ossim-data-pvc
-      - name: maxar-blacksky-data
-        persistentVolumeClaim:
-          claimName: omar-oms-maxar-blacksky-data-pvc
-      - name: maxar-skysat-data
-        persistentVolumeClaim:
-          claimName: omar-oms-maxar-skysat-data-pvc
-      - name: gegd-dem-tiled
-        persistentVolumeClaim:
-          claimName: omar-wms-lite-gegd-dem-tiled-pvc
-
-
+{{- include "unzip-and-ingest.volumes" . | indent 8 }}
