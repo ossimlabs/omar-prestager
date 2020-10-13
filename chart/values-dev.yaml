@@ -37,12 +37,12 @@ global:
 
     ossim-data:
       type: nfs
-      nfsServer:  10.100.40.114
-      nfsMountPoint: /ossim-data
+      nfsServer:  10.70.40.254
+      nfsMountPoint: /omar-3pa-dev-nfs
       accessModes:
         - ReadWriteMany
       size: 500Gi
-      mountPath: /ossim-data
+      mountPath: /data
 
     maxar-blacksky-data:
       type: nfs
