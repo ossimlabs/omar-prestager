@@ -8,6 +8,11 @@ data:
   application.yaml: |-
     omar:
       prestager:
-      {{ include "geoscript-footprint-cleanup.dbInfo" . }}
+        database:
+          name: {{ .Values.database.name }}
+          username: {{ .Values.database.user }}
+          password: {{ .Values.database.password }}
+          host: {{ .Values.database.host }}
+          port: {{ .Values.database.port }}
       index:
         stagerAddress: http://${OMAR_STAGER_APP_SERVICE_HOST}:${OMAR_STAGER_APP_SERVICE_PORT}/omar-stager

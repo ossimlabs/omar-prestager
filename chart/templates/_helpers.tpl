@@ -10,16 +10,6 @@
   {{- end }}
 {{- end -}}
 
-{{/* Template to populate the database connection info in the groovy configmap */}}
-{{- define "omar-prestager.dbInfo" -}}
-database:
-  name: {{ .Values.database.name }}
-  username: {{ .Values.database.user }}
-  password: {{ .Values.database.password }}
-  host: {{ .Values.database.host }}
-  port: {{ .Values.database.port }}
-{{- end -}}
-
 {{/* Templates for the configMap mounts section */}}
 
 {{- define "omar-prestager.mountBuckets" -}}
