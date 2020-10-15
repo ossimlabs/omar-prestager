@@ -6,7 +6,7 @@ metadata:
   labels:
     app:  {{ .Chart.Name }}
 data:
-  application.yaml: |-
+  application.yml: |-
     omar:
       prestager:
         database:
@@ -15,5 +15,5 @@ data:
           password: {{ .Values.global.database.password }}
           host: {{ .Values.global.database.host }}
           port: {{ .Values.global.database.port }}
-      index:
-        stagerAddress: http://${OMAR_STAGER_APP_SERVICE_HOST}:${OMAR_STAGER_APP_SERVICE_PORT}/omar-stager
+        index:
+          stagerAddress: http://${OMAR_STAGER_APP_SERVICE_HOST}:${OMAR_STAGER_APP_SERVICE_PORT}/omar-stager

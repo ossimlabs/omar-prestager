@@ -25,7 +25,7 @@ class OssimService {
   File scratchDir = new File( '/scratch' )
   ImageFileRepository imageFileRepository
 
-  @Value( '${omar.prestager.index.stagerAdress}' )
+  @Value( '${omar.prestager.index.stagerAddress}' )
   String stagerAddress
 
   URL stagerUrl
