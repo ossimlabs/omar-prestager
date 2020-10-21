@@ -36,6 +36,9 @@ image:
   tag: null
   pullPolicy: null
 
+hostnames: []
+
+ingressPath: /omar-prestager
 internalPort: 8080
 externalPort: 8080
 
@@ -50,4 +53,26 @@ livenessProbe:
   initialDelaySeconds: 5
   timeoutSeconds: 3
   failureThreshold: 10
+
+resources:
+  limits:
+    cpu: 3000m
+    memory: 2Gi
+  requests:
+    cpu: 1000m
+    memory: 1Gi
+
+# Add an empty dir mount
+existingVolumes:
+  scratch-volume:
+    type: empty
+    mountPath: /scratch  
+
+# This information should be included in the parent chart in order to overwrite the values here
+database:
+  name: null
+  host: null
+  user: null
+  password: null
+  port: null
 

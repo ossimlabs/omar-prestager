@@ -10,19 +10,6 @@
   {{- end }}
 {{- end -}}
 
-{{/* Templates for the configMap mounts section */}}
-
-{{- define "omar-prestager.mountBuckets" -}}
-{{- range $volumeName := .Values.volumeNames }}
-{{- $volumeDict := index $.Values.global.volumes $volumeName }}
-- bucket: {{ $volumeDict.mountPath | replace "/" "" }}
-  ingestDirectory: ingest
-  archiveDirectory: archive
-  unzipDirectory: unzipped
-{{- end -}}
-{{- end -}}
-
-
 
 {{/* Templates for the volumeMounts section */}}
 
@@ -47,9 +34,18 @@
 {{- end -}}
 {{- end -}}
 
+
+{{- define "omar-prestager.volumeMounts.existing" -}}
+{{- range $existingVolumeName, $existingVolumeDict := .Values.existingVolumes }}
+- name: {{ $existingVolumeName }}
+  mountPath: {{ $existingVolumeDict.mountPath }}
+{{- end -}}
+{{- end -}}
+
 {{- define "omar-prestager.volumeMounts" -}}
 {{- include "omar-prestager.volumeMounts.configmaps" . -}}
 {{- include "omar-prestager.volumeMounts.pvcs" . -}}
+{{- include "omar-prestager.volumeMounts.existing" . -}}
 {{- end -}}
 
 
@@ -75,7 +71,17 @@
 {{- end -}}
 {{- end -}}
 
+{{- define "omar-prestager.volumes.existing" -}}
+{{- range $existingVolumeName, $existingVolumeDict := .Values.existingVolumes }}
+- name: {{ $existingVolumeName }}
+  {{- if eq $existingVolumeDict.type "empty" }}
+  emptyDir: {}
+  {{- end }} 
+{{- end -}}
+{{- end -}}
+
 {{- define "omar-prestager.volumes" -}}
 {{- include "omar-prestager.volumes.configmaps" . -}}
 {{- include "omar-prestager.volumes.pvcs" . -}}
+{{- include "omar-prestager.volumes.existing" . -}}
 {{- end -}}

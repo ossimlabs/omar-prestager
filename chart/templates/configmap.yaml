@@ -5,7 +5,7 @@ metadata:
   labels:
     app: "{{ .Values.appName }}"
 data:
-  application.yaml: |-
+  application.yml: |-
     omar:
       prestager:
         database:

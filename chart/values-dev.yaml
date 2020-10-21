@@ -12,6 +12,11 @@ replicas: 1
 appName: omar-prestager-test
 
 global:
+  useTls: true
+  useTLSClientAuth: false
+  sslCertSecretName: ssl-certs
+  authSslCertSecretName: pki-ssl-certs
+
   dockerRepository: nexus-docker-public-hosted.ossim.io
   imagePullSecret:
     registry: nexus-3pa-dev-docker-proxy.ossim.io
@@ -20,11 +25,6 @@ global:
   hostname: omar-3pa-dev.ossim.io
 
   createIngress: true
-  useTls: false
-  useTLSClientAuth: false
-  sslCertSecretName: null
-  authSslCertSecretName: null
-
   createImagePullSecret: true
   useImagePullSecret: true
 
@@ -34,7 +34,6 @@ global:
 
   # This is used in the helper to create the pvcs
   volumes:
-
     ossim-data:
       type: nfs
       nfsServer:  10.70.40.254
@@ -44,30 +43,16 @@ global:
       size: 500Gi
       mountPath: /data
 
-    maxar-blacksky-data:
-      type: nfs
-      nfsServer: 10.70.40.254
-      nfsMountPoint: /maxar-blacksky-data
-      accessModes:
-        - ReadWriteMany
-      size: 500Gi
-      mountPath: /maxar-blacksky-data
-
-    maxar-skysat-data:
-      type: nfs
-      nfsServer: 10.70.40.254
-      nfsMountPoint: /maxar-skysat-data
-      accessModes:
-        - ReadWriteMany
-      size: 500Gi
-      mountPath: /maxar-skysat-data
-
 
 # These are used in the helper to create the pvcs, if no mounts are needed remove
 volumeNames:
   - ossim-data
-  - maxar-blacksky-data
-  - maxar-skysat-data
+
+existingVolumes:
+  scratch-volume:
+    type: empty
+    mountPath: /scratch
+ 
 
 # This is overwritten by skaffold, if override is specified
 # in the skaffold.yaml
@@ -76,6 +61,10 @@ image:
   tag: 3pa-hotfix
   pullPolicy: Always
 
+hostnames:
+  - omar-prestager.ossim.io 
+
+ingressPath: /omar-prestager
 internalPort: 8080
 externalPort: 8080
 
