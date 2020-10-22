@@ -1,7 +1,7 @@
 apiVersion: skaffold/v2beta7
 kind: Config
 metadata:
-  name: omar-prestager
+  name: omar-prestager-test
 build:
   artifacts:
   - image: nexus-docker-public-hosted.ossim.io/omar-prestager
@@ -9,7 +9,7 @@ build:
 deploy:
   helm:
     releases:
-    - name: omar-prestager
+    - name: omar-prestager-test
       chartPath: chart
       valuesFiles:
         - chart/values-dev.yaml
