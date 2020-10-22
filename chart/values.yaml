@@ -16,7 +16,7 @@ global:
     username: postgres
 #    password: vME7B9RWivNqBkgfz5N9
 #    host: gsp-dev-omar.cfussmnw2zzg.us-east-1.rds.amazonaws.com
-    host: omar-3pa-dev-aurora-rdsdbcluster-nzw5yqvz2wso.cluster-cfussmnw2zzg.us-east-1.rds.amazonaws.com
+    host: omar-3pa-dev-aurora-rdsdbcluster-lw6rbkhnvkrk.cluster-cfussmnw2zzg.us-east-1.rds.amazonaws.com
     password: qKcSn=3G|3~54*gO
     port: 5432
   resources:
