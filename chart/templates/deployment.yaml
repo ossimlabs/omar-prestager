@@ -38,6 +38,10 @@ spec:
 #          name: input
         - mountPath: /data
           name: ossim-data
+        - mountPath: /maxar-blacksky-data/
+          name: blacksky-data
+        - mountPath: /maxar-skysat-data
+          name: skysat-data
 
       volumes:
       - name: scratch-volume
@@ -48,4 +52,10 @@ spec:
       - name: ossim-data
         persistentVolumeClaim:
           claimName: {{ .Values.global.storage.pvc.name }}
+      - name: skysat-data
+        persistentVolumeClaim:
+          claimName: omar-stager-maxar-skysat-data-pvc
+      - name: blacksky-data
+        persistentVolumeClaim:
+          claimName: omar-stager-maxar-blacksky-data-pvc
 
