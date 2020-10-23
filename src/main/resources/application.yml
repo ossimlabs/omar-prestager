@@ -31,16 +31,12 @@ omar:
   prestager:
     database:
       name: omardb-prestager
-#      name: o2_omar_db
       username: postgres
       password: postgres
-#      password: 'qKcSn=3G|3~54*gO'
       host: host.docker.internal
-#      host: omar-3pa-dev-aurora-rdsdbcluster-nzw5yqvz2wso.cluster-cfussmnw2zzg.us-east-1.rds.amazonaws.com
       port: 5432
     process:
       pollEvery: '1s'
     index:
-#      stagerAdress:  http://localhost/omar-services
-      stagerAdress:  http://host.docker.internal/omar-services
+      stagerAddress:  http://host.docker.internal/omar-services
       cron: '* * * * *'

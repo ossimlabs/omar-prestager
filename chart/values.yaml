@@ -36,7 +36,6 @@ image:
   tag: null
   pullPolicy: null
 
-hostnames: []
 
 ingressPath: /omar-prestager
 internalPort: 8080
