@@ -6,6 +6,8 @@ build:
   artifacts:
   - image: nexus-docker-public-hosted.ossim.io/omar-prestager
     jib: {}
+  tagPolicy:
+    sha256: {}
 deploy:
   helm:
     releases:
