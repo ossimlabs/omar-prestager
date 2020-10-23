@@ -18,6 +18,13 @@ global:
     password: null
   hostname: omar-dev.ossim.io
 
+  omarDb:
+    name: null
+    host: null
+    user: null
+    password: null
+    port: null
+
   createIngress: true
   useTls: false
   useTLSClientAuth: false
@@ -32,7 +39,7 @@ global:
   useSpringConfigServer: false
 
 image:
-  name: null
+  name: omar-prestager
   tag: null
   pullPolicy: null
 

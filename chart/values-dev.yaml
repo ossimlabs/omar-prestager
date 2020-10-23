@@ -24,6 +24,13 @@ global:
     password: lhLvXspFyX9wraf6jB1I
   hostname: omar-3pa-dev.ossim.io
 
+  omarDb:
+    name: o2_omar_db
+    host: omar-3pa-dev-aurora-rdsdbcluster-lw6rbkhnvkrk.cluster-cfussmnw2zzg.us-east-1.rds.amazonaws.com
+    user: postgres
+    password: qKcSn=3G|3~54*gO
+    port: 5432
+
   createIngress: true
   createImagePullSecret: true
   useImagePullSecret: true
@@ -105,11 +112,3 @@ resources:
   requests:
     cpu: 1000m
     memory: 1Gi
-
-# This information should be included in the parent chart in order to overwrite the values here
-database:
-  name: o2_omar_db
-  host: omar-3pa-dev-aurora-rdsdbcluster-lw6rbkhnvkrk.cluster-cfussmnw2zzg.us-east-1.rds.amazonaws.com
-  user: postgres
-  password: qKcSn=3G|3~54*gO
-  port: 5432

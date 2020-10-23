@@ -9,11 +9,11 @@ data:
     omar:
       prestager:
         database:
-          name: {{ .Values.database.name }}
-          username: {{ .Values.database.user }}
-          password: {{ .Values.database.password }}
-          host: {{ .Values.database.host }}
-          port: {{ .Values.database.port }} 
+          name: {{ .Values.global.omarDb.name }}
+          username: {{ .Values.global.omarDb.user }}
+          password: {{ .Values.global.omarDb.password }}
+          host: {{ .Values.global.omarDb.host }}
+          port: {{ .Values.global.omarDb.port }} 
         process:
           pollEvery: '1s'                  
         index:
@@ -21,9 +21,9 @@ data:
           cron: '* * * * *' 
     datasources:
       default:
-        url: jdbc:postgresql://{{ .Values.database.host }}/{{ .Values.database.name }}
+        url: jdbc:postgresql://{{ .Values.global.omarDb.host }}/{{ .Values.global.omarDb.name }}
         driverClassName: org.postgresql.Driver
-        username: {{ .Values.database.user }}
-        password: {{ .Values.database.password }}
+        username: {{ .Values.global.omarDb.user }}
+        password: {{ .Values.global.omarDb.password }}
         schema-generate: CREATE
         dialect: POSTGRES        
