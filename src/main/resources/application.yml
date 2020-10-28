@@ -17,6 +17,7 @@ micronaut:
         mapping: /swagger-ui/**
 #  server:
 #    port: 8888
+
 datasources:
   default:
     url: jdbc:postgresql://${omar.prestager.database.host}/${omar.prestager.database.name}
@@ -38,6 +39,7 @@ omar:
     process:
       pollEvery: '1s'
     index:
-#      stagerAdress:  http://localhost/omar-services
-      stagerAdress:  http://host.docker.internal/omar-services
+#      stagerAddress:  http://localhost/omar-services
+      stagerAddress:  http://host.docker.internal/omar-services
       cron: '* * * * *'
+
