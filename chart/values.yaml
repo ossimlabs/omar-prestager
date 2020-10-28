@@ -74,11 +74,3 @@ existingVolumes:
     type: empty
     mountPath: /scratch  
 
-# This information should be included in the parent chart in order to overwrite the values here
-database:
-  name: null
-  host: null
-  user: null
-  password: null
-  port: null
-
