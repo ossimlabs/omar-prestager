@@ -4,7 +4,7 @@ metadata:
   name: omar-prestager-test
 build:
   artifacts:
-  - image: nexus-docker-public-hosted.ossim.io/omar-prestager
+  - image: nexus-docker-public-hosted.ossim.io/omar-prestager-test
     jib: {}
   tagPolicy:
     sha256: {}
@@ -20,4 +20,4 @@ deploy:
       # If you want to use an existing image rather than skaffold's
       # comment this out and specify the image in the values-dev.yaml
       artifactOverrides:
-        imageSkaffoldOverride: nexus-docker-public-hosted.ossim.io/omar-prestager       
+        imageSkaffoldOverride: nexus-docker-public-hosted.ossim.io/omar-prestager-test       
