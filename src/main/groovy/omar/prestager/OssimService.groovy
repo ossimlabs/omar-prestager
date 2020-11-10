@@ -134,5 +134,8 @@ class OssimService {
     }
 
     httpClient = HttpClient.create( new URL( stagerUrl.toString() - stagerUrl?.path ) )
+
+    log.info "stagerAddress = ${stagerAddress}"
+
   }
 }

@@ -39,7 +39,6 @@ omar:
     process:
       pollEvery: '1s'
     index:
-#      stagerAddress:  http://localhost/omar-services
       stagerAddress:  http://host.docker.internal/omar-services
       cron: '* * * * *'
 

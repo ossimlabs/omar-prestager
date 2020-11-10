@@ -87,10 +87,10 @@ tasks.withType( JavaExec ) {
 
 jib {
   from {
-    image = 'docker://ossim-runtime-alpine'
+    image = 'docker://nexus-docker-public-hosted.ossim.io/ossim-runtime-alpine:mando'
   }
   to {
-    image = 'nexus-docker-public-hosted.ossim.io/omar-prestager'
+    image = 'nexus-docker-public-hosted.ossim.io/omar-prestager-test'
   }
   extraDirectories {
     paths {

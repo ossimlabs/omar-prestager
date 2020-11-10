@@ -1,19 +1,29 @@
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Chart.Name }}
+  name: "{{ .Values.appName }}"
   labels:
-    app:  {{ .Chart.Name }}
+    app: "{{ .Values.appName }}"
 data:
-  application.yml: |-
+  application.yml: |- 
     omar:
       prestager:
         database:
-          name: {{ .Values.global.database.name }}
-          username: {{ .Values.global.database.username }}
-          password: {{ .Values.global.database.password }}
-          host: {{ .Values.global.database.host }}
-          port: {{ .Values.global.database.port }}
+          name: {{ .Values.global.omarDb.name }}
+          username: {{ .Values.global.omarDb.user }}
+          password: {{ .Values.global.omarDb.password }}
+          host: {{ .Values.global.omarDb.host }}
+          port: {{ .Values.global.omarDb.port }} 
+        process:
+          pollEvery: '1s'                  
         index:
           stagerAddress: http://${OMAR_STAGER_APP_SERVICE_HOST}:${OMAR_STAGER_APP_SERVICE_PORT}/omar-stager
+          cron: '* * * * *' 
+    datasources:
+      default:
+        url: jdbc:postgresql://{{ .Values.global.omarDb.host }}/{{ .Values.global.omarDb.name }}
+        driverClassName: org.postgresql.Driver
+        username: {{ .Values.global.omarDb.user }}
+        password: {{ .Values.global.omarDb.password }}
+        schema-generate: CREATE
+        dialect: POSTGRES        
