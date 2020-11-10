@@ -1,0 +1,76 @@
+# Default values for chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+# This values file is used to support the 3pa parent chart
+# deployment. Check that chart to modify these values.
+
+replicas: 1
+
+appName: omar-prestager
+
+global:
+  dockerRepository: nexus-docker-public-hosted.ossim.io
+  imagePullSecret:
+    registry: null
+    username: null
+    password: null
+  hostname: omar-dev.ossim.io
+
+  omarDb:
+    name: null
+    host: null
+    user: null
+    password: null
+    port: null
+
+  createIngress: true
+  useTls: false
+  useTLSClientAuth: false
+  sslCertSecretName: null
+  authSslCertSecretName: null
+
+  createImagePullSecret: true
+  useImagePullSecret: true
+
+  createHpa: true
+  createPVs: true
+  useSpringConfigServer: false
+
+image:
+  name: omar-prestager
+  tag: null
+  pullPolicy: null
+
+
+ingressPath: /omar-prestager
+internalPort: 8080
+externalPort: 8080
+
+readinessProbe:
+  path: /health
+  port: 8080
+  initialDelaySeconds: 5
+  timeoutSeconds: 3
+livenessProbe:
+  path: /health
+  port: 8080
+  initialDelaySeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 10
+
+resources:
+  limits:
+    cpu: 3000m
+    memory: 2Gi
+  requests:
+    cpu: 1000m
+    memory: 1Gi
+
+# Add an empty dir mount
+existingVolumes:
+  scratch-volume:
+    type: empty
+    mountPath: /scratch  
+

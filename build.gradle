@@ -1,11 +1,11 @@
 plugins {
   id "groovy"
   id "application"
-  id "com.google.cloud.tools.jib" version "2.5.0"
+  id "com.google.cloud.tools.jib" version "2.6.0"
   id "com.github.ben-manes.versions" version "0.31.0"
 }
 
-version "0.1"
+version "0.6"
 group "omar.prestager"
 
 repositories {
@@ -24,6 +24,7 @@ dependencies {
 
   compileOnly( platform( "io.micronaut:micronaut-bom:$micronautVersion" ) )
   compileOnly( "io.micronaut:micronaut-inject-groovy" )
+  compileOnly("io.micronaut.data:micronaut-data-processor")
   compileOnly("io.micronaut.configuration:micronaut-openapi")
   implementation( platform( "io.micronaut:micronaut-bom:$micronautVersion" ) )
   implementation( "io.micronaut:micronaut-inject" )
@@ -31,6 +32,10 @@ dependencies {
   implementation( "io.micronaut.groovy:micronaut-runtime-groovy" )
   implementation( "io.micronaut:micronaut-http-server-netty" )
   implementation( "io.micronaut:micronaut-http-client" )
+  implementation("io.micronaut:micronaut-management")
+  implementation("io.micronaut.kubernetes:micronaut-kubernetes-discovery-client")
+  implementation("io.micronaut.sql:micronaut-jdbc-hikari")
+  implementation("io.micronaut.data:micronaut-data-jdbc")
   implementation("io.swagger.core.v3:swagger-annotations")
   implementation("io.micronaut:micronaut-management")
   implementation( "io.micronaut:micronaut-management" )
@@ -82,10 +87,37 @@ tasks.withType( JavaExec ) {
 
 jib {
   from {
-    image = 'docker://ossim-runtime-alpine'
+    image = 'docker://nexus-docker-public-hosted.ossim.io/ossim-runtime-alpine:mando'
   }
   to {
-    image = 'chimera/omar-prestager'
+    image = 'nexus-docker-public-hosted.ossim.io/omar-prestager-test'
+  }
+  extraDirectories {
+    paths {
+      path {
+        from = file('src/main/jib')
+        into = "/app"
+      }
+      path {
+        from = file('src/main/jib')
+        into = "/app"
+      }
+    }
+    permissions = [
+        "/app/run_java.sh": "755"
+    ]
+  }
+  containerizingMode = 'packaged'
+  container {
+    environment = [
+        JAVA_APP_DIR: '/app',
+        JAVA_MAIN_CLASS: mainClassName,
+        JAVA_CLASSPATH: '/app/classpath/*:/app/libs/*',
+        JAVA_OPTIONS: '-server -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -XshowSettings:vm -XX:+UseStringDeduplication '
+    ]
+    ports = ['8080']
+    creationTime = 'USE_CURRENT_TIMESTAMP'
+    entrypoint = ['/app/run_java.sh']
   }
 }
 
