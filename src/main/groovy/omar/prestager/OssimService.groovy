@@ -84,30 +84,33 @@ class OssimService {
     imageFileRepository.save( imageFile )
   }
 
-  @Transactional
   @Scheduled( fixedRate = '${omar.prestager.process.pollEvery}' )
   void findWork() {
     ImageFile imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.QUEUED.toString() ).orElse( null )
 
     if ( imageFile ) {
       imageFile.status = ImageFile.FileStatus.STAGING
-      imageFileRepository.update( imageFile )
+      updateImageFile( imageFile )
 
       processFile( imageFile.filename as File )
 
       imageFile.status = ImageFile.FileStatus.READY_TO_INDEX
-      imageFileRepository.update( imageFile )
+      updateImageFile( imageFile )
     }
   }
 
   @Transactional
+  private ImageFile updateImageFile( ImageFile imageFile ) {
+    imageFileRepository.update( imageFile )
+  }
+
   @Scheduled( cron = '${omar.prestager.index.cron}' )
   void indexImage() {
     ImageFile imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
 
     while ( imageFile ) {
       imageFile.status = ImageFile.FileStatus.INDEXING
-      imageFileRepository.update( imageFile )
+      updateImageFile( imageFile )
 
       try {
         def response = httpClient?.toBlocking()?.exchange( HttpRequest.POST( stagerUrl?.path,
@@ -119,7 +122,7 @@ class OssimService {
       }
 
       imageFile.status = ImageFile.FileStatus.COMPLETE
-      imageFileRepository.update( imageFile )
+      updateImageFile( imageFile )
 
       imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
     }
