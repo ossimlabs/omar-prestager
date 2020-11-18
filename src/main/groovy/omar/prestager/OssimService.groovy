@@ -94,7 +94,12 @@ class OssimService {
 
       processFile( imageFile.filename as File )
 
-      imageFile.status = ImageFile.FileStatus.READY_TO_INDEX
+      imageFile.status = ImageFile.FileStatus.FAILED_HISTOGRAM
+      // if () {
+        // imageFile.status = ImageFile.FileStatus.READY_TO_INDEX
+      // }
+      
+      
       updateImageFile( imageFile )
     }
   }
@@ -117,11 +122,13 @@ class OssimService {
             [ filename: imageFile?.filename ] ), String )
 
         log.info response?.body?.get()
+        imageFile.status = ImageFile.FileStatus.COMPLETE
       } catch ( e ) {
         log.error e.message
+        imageFile.status = ImageFile.FileStatus.FAILED_POST
       }
 
-      imageFile.status = ImageFile.FileStatus.COMPLETE
+      // imageFile.status = ImageFile.FileStatus.COMPLETE
       updateImageFile( imageFile )
 
       imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )

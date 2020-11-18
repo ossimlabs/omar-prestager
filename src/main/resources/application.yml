@@ -31,10 +31,10 @@ datasources:
 omar:
   prestager:
     database:
-      name: omardb-prestager
-      username: postgres
+      name: omardb
+      username: petersubacz
       password: postgres
-      host: host.docker.internal
+      host: localhost
       port: 5432
     process:
       pollEvery: '1s'

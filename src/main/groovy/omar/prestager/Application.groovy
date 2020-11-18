@@ -8,7 +8,8 @@ import io.swagger.v3.oas.annotations.info.Info
 @OpenAPIDefinition(
     info = @Info(
         title = "omar-prestager",
-        version = "0.1"
+        version = "0.1",
+        description = "Swagger API for omar prestager.\n The processFile function a user to .... \n The queueFile function ... \n"
     )
 )
 @CompileStatic
