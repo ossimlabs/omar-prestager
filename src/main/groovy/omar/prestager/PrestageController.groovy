@@ -24,7 +24,7 @@ class PrestageController {
   @ExecuteOn( TaskExecutors.IO )
   @Post( uri = "/processFile", produces = "text/plain" )
   @Operation(summary = "A queued file will have a histogram created via ossim-img2rr and have its state changed in the queue table.",
-    description = "Grabs 'QUEUED' file and changes the state to 'STAGING'. A histogram will be created and stored as an internal file as a '.his' extension. Upon completiong the state state in the database will be set to 'FAILED_HISTOGRAM' or 'READY_TO_INDEX'. If the file is 'READY_TO_INDEX', it will be posted to the STAGER APP. Afterward the file will be marked as completed upon success or FAILED_POST."
+    description = "Grabs 'QUEUED' file and changes the state to 'STAGING'. A histogram will be created and stored as an internal file as a '.his' extension. Upon completiong the state state in the database will be set to 'FAILED_HISTOGRAM' or 'READY_TO_INDEX'. If the file is 'READY_TO_INDEX', it will be posted to the STAGER APP. Afterward the file will be marked as completed upon success."
       )
   @Tag(name = "processFile")
   @ApiResponse(responseCode = "400", description = "Invalid file supplied")
