@@ -16,8 +16,7 @@ class ImageFile {
     READY_TO_INDEX,
     INDEXING,
     COMPLETE,
-    FAILED_HISTOGRAM,
-    FAILED_POST
+    FAILED_HISTOGRAM
   }
 
   @Id
