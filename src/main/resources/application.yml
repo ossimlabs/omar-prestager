@@ -31,8 +31,8 @@ datasources:
 omar:
   prestager:
     database:
-      name: omardb
-      username: petersubacz
+      name: omardb-prestager
+      username: postgres
       password: postgres
       host: localhost
       port: 5432
