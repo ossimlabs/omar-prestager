@@ -87,16 +87,17 @@ podTemplate(
         withGradle {
           script {
             sh 'apk add gradle'
-            sh 'gradle assemble'
+            sh 'gradle jDB'
           }
         }
       }
-    }      
-
+    }
+    
     stage("Push Docker Image") {
       container('docker'){
         withDockerRegistry(credentialsId: 'dockerCredentials', url: "https://${DOCKER_REGISTRY_PRIVATE_UPLOAD_URL}") {
           script {
+            sh "docker tag nexus-docker-public-hosted.ossim.io/omar-prestager:latest ${DOCKER_IMAGE_PATH}:${TAG_NAME}"
             sh "docker push ${DOCKER_IMAGE_PATH}:${TAG_NAME}"
 
             if (BRANCH_NAME == "master") {
