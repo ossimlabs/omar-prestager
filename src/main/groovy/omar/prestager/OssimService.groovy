@@ -75,6 +75,7 @@ class OssimService {
     FileUtils.deleteDirectory( workDir )
 
     results
+    return exitCode
   }
 
   @Transactional
@@ -92,9 +93,13 @@ class OssimService {
       imageFile.status = ImageFile.FileStatus.STAGING
       updateImageFile( imageFile )
 
-      processFile( imageFile.filename as File )
-
-      imageFile.status = ImageFile.FileStatus.READY_TO_INDEX
+      def processStatus = processFile( imageFile.filename as File )
+      
+      if (processStatus == 0) {
+        imageFile.status = ImageFile.FileStatus.READY_TO_INDEX
+      }else{
+        imageFile.status = ImageFile.FileStatus.FAILED_HISTOGRAM
+      }
       updateImageFile( imageFile )
     }
   }
@@ -109,22 +114,24 @@ class OssimService {
     ImageFile imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
 
     while ( imageFile ) {
-      imageFile.status = ImageFile.FileStatus.INDEXING
-      updateImageFile( imageFile )
+      if (imageFile.status == ImageFile.FileStatus.READY_TO_INDEX){
+        imageFile.status = ImageFile.FileStatus.INDEXING
+        updateImageFile( imageFile )
 
-      try {
-        def response = httpClient?.toBlocking()?.exchange( HttpRequest.POST( stagerUrl?.path,
-            [ filename: imageFile?.filename ] ), String )
+        try {
+          def response = httpClient?.toBlocking()?.exchange( HttpRequest.POST( stagerUrl?.path,
+              [ filename: imageFile?.filename ] ), String )
 
-        log.info response?.body?.get()
-      } catch ( e ) {
-        log.error e.message
+          log.info response?.body?.get()
+        } catch ( e ) {
+          log.error e.message
+        }
+
+        imageFile.status = ImageFile.FileStatus.COMPLETE
+        updateImageFile( imageFile )
+
+        imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
       }
-
-      imageFile.status = ImageFile.FileStatus.COMPLETE
-      updateImageFile( imageFile )
-
-      imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
     }
   }
 
