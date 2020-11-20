@@ -87,7 +87,7 @@ podTemplate(
         withGradle {
           script {
             sh 'apk add gradle'
-            sh 'gradle assemble'
+            sh 'gradle jDB'
           }
         }
       }
@@ -98,7 +98,8 @@ podTemplate(
         withDockerRegistry(credentialsId: 'dockerCredentials', url: "https://${DOCKER_REGISTRY_DOWNLOAD_URL}") {
           sh  "docker build . -t ${DOCKER_IMAGE_PATH}:${TAG_NAME} \
                     --build-arg DOCKER_REGISTRY=${DOCKER_REGISTRY_DOWNLOAD_URL} \
-                    --build-arg BASE_IMAGE_TAG=release"
+                    --build-arg BASE_IMAGE_TAG=release \"
+                    --build-arg VERSION=VERSION
           }
         }
       }          
