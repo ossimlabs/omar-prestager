@@ -90,7 +90,7 @@ jib {
     image = 'nexus-docker-private-hosted.ossim.io/ossim-alpine-runtime:mando'
   }
   to {
-    image = 'nexus-docker-public-hosted.ossim.io/omar-prestager'
+    image = 'nexus-docker-private-hosted.ossim.io/omar-prestager'
   }
   extraDirectories {
     paths {
