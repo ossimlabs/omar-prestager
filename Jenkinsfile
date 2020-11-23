@@ -61,26 +61,46 @@ podTemplate(
         }
     }
 
-    stage("Load Variables"){
-      step([$class     : "CopyArtifact",
-            projectName: "gegd-dgcs-jenkins-artifacts",
-            filter     : "common-variables.groovy",
-            flatten    : true])
-      load "common-variables.groovy"
+    stage("Load Variables")
+          {
+            withCredentials([string(credentialsId: 'o2-artifact-project', variable: 'o2ArtifactProject')]) {
+              step ([$class: "CopyArtifact",
+                projectName: o2ArtifactProject,
+                filter: "common-variables.groovy",
+                flatten: true])
+              }
+              load "common-variables.groovy"
 
-      switch (BRANCH_NAME) {
-        case "master":
-          TAG_NAME = VERSION
-          break
-        case "dev":
-          TAG_NAME = "latest"
-          break
-        default:
-          TAG_NAME = BRANCH_NAME
-          break
-      }
-      DOCKER_IMAGE_PATH = "${DOCKER_REGISTRY_PRIVATE_UPLOAD_URL}/omar-prestager"
-    }
+            switch (BRANCH_NAME) {
+            case "master":
+              TAG_NAME = VERSION
+              break
+
+            case "dev":
+              TAG_NAME = "latest"
+              break
+
+            default:
+              TAG_NAME = BRANCH_NAME
+              break
+          }
+
+        DOCKER_IMAGE_PATH = "${DOCKER_REGISTRY_PRIVATE_UPLOAD_URL}/omar-prestager"
+
+        }
+        stage('SonarQube Analysis') {
+            nodejs(nodeJSInstallationName: "${NODEJS_VERSION}") {
+                def scannerHome = tool "${SONARQUBE_SCANNER_VERSION}"
+
+                withSonarQubeEnv('sonarqube'){
+                    sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=omar-prestager \
+                        -Dsonar.login=${SONARQUBE_TOKEN}
+                    """
+                }
+            }
+        }
 
     stage("Build & Deploy") {
       container('docker'){
