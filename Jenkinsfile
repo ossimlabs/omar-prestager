@@ -85,9 +85,11 @@ podTemplate(
     stage("Build & Deploy") {
       container('docker'){
         withGradle {
+          withDockerRegistry(credentialsId: 'dockerCredentials', url: "https://${DOCKER_REGISTRY_PRIVATE_UPLOAD_URL}") {
           script {
             sh 'apk add gradle'
             sh 'gradle jDB'
+            }
           }
         }
       }
