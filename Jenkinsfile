@@ -85,7 +85,8 @@ podTemplate(
               break
           }
 
-        DOCKER_IMAGE_PATH = "${DOCKER_REGISTRY_PRIVATE_UPLOAD_URL}/omar-prestager"
+        DOCKER_PRIVATE_IMAGE_PATH = "${DOCKER_REGISTRY_PRIVATE_UPLOAD_URL}/omar-prestager"
+        DOCKER_PUBLIC_IMAGE_PATH = "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}/omar-prestager"
 
         }
         stage('SonarQube Analysis') {
@@ -119,12 +120,26 @@ podTemplate(
       container('docker'){
         withDockerRegistry(credentialsId: 'dockerCredentials', url: "https://${DOCKER_REGISTRY_PRIVATE_UPLOAD_URL}") {
           script {
-            sh "docker tag nexus-docker-private-hosted.ossim.io/omar-prestager:latest ${DOCKER_IMAGE_PATH}:${TAG_NAME}"
-            sh "docker push ${DOCKER_IMAGE_PATH}:${TAG_NAME}"
+            sh "docker tag nexus-docker-private-hosted.ossim.io/omar-prestager:latest ${DOCKER_PRIVATE_IMAGE_PATH}:${TAG_NAME}"
+            sh "docker push ${DOCKER_PRIVATE_IMAGE_PATH}:${TAG_NAME}"
+
 
             if (BRANCH_NAME == "master") {
-              sh  "docker tag ${DOCKER_IMAGE_PATH}:${TAG_NAME} ${DOCKER_IMAGE_PATH}:release"
-              sh  "docker push ${DOCKER_IMAGE_PATH}:release"
+              sh  "docker tag ${DOCKER_PRIVATE_IMAGE_PATH}:${TAG_NAME} ${DOCKER_PRIVATE_IMAGE_PATH}:release"
+              sh  "docker push ${DOCKER_PRIVATE_IMAGE_PATH}:release"
+              }
+            }
+          }
+
+        withDockerRegistry(credentialsId: 'dockerCredentials', url: "https://${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}") {
+          script {
+              sh "docker tag nexus-docker-public-hosted.ossim.io/omar-prestager:latest ${DOCKER_PUBLIC_IMAGE_PATH}:${TAG_NAME}"
+              sh "docker push ${DOCKER_PUBLIC_IMAGE_PATH}:${TAG_NAME}"
+
+
+            if (BRANCH_NAME == "master") {
+              sh  "docker tag ${DOCKER_PUBLIC_IMAGE_PATH}:${TAG_NAME} ${DOCKER_PUBLIC_IMAGE_PATH}:release"
+              sh  "docker push ${DOCKER_PUBLIC_IMAGE_PATH}:release"
             }
           }
         }
