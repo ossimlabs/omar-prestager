@@ -34,7 +34,7 @@ omar:
       name: omardb-prestager
       username: postgres
       password: postgres
-      host: host.docker.internal
+      host: localhost
       port: 5432
     process:
       pollEvery: '1s'

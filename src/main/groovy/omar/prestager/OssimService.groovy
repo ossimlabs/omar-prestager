@@ -75,6 +75,7 @@ class OssimService {
     FileUtils.deleteDirectory( workDir )
 
     results
+    return exitCode
   }
 
   @Transactional
@@ -84,53 +85,64 @@ class OssimService {
     imageFileRepository.save( imageFile )
   }
 
-  @Transactional
   @Scheduled( fixedRate = '${omar.prestager.process.pollEvery}' )
   void findWork() {
     ImageFile imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.QUEUED.toString() ).orElse( null )
 
     if ( imageFile ) {
       imageFile.status = ImageFile.FileStatus.STAGING
-      imageFileRepository.update( imageFile )
+      updateImageFile( imageFile )
 
-      processFile( imageFile.filename as File )
-
-      imageFile.status = ImageFile.FileStatus.READY_TO_INDEX
-      imageFileRepository.update( imageFile )
+      def processStatus = processFile( imageFile.filename as File )
+      
+      if (processStatus == 0) {
+        imageFile.status = ImageFile.FileStatus.READY_TO_INDEX
+      }else{
+        imageFile.status = ImageFile.FileStatus.FAILED_HISTOGRAM
+      }
+      updateImageFile( imageFile )
     }
   }
 
   @Transactional
+  private ImageFile updateImageFile( ImageFile imageFile ) {
+    imageFileRepository.update( imageFile )
+  }
+
   @Scheduled( cron = '${omar.prestager.index.cron}' )
   void indexImage() {
     ImageFile imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
 
     while ( imageFile ) {
-      imageFile.status = ImageFile.FileStatus.INDEXING
-      imageFileRepository.update( imageFile )
+      if (imageFile.status == ImageFile.FileStatus.READY_TO_INDEX){
+        imageFile.status = ImageFile.FileStatus.INDEXING
+        updateImageFile( imageFile )
 
-      try {
-        def response = httpClient?.toBlocking()?.exchange( HttpRequest.POST( stagerUrl?.path,
-            [ filename: imageFile?.filename ] ), String )
+        try {
+          def response = httpClient?.toBlocking()?.exchange( HttpRequest.POST( stagerUrl?.path,
+              [ filename: imageFile?.filename ] ), String )
 
-        log.info response?.body?.get()
-      } catch ( e ) {
-        log.error e.message
+          log.info response?.body?.get()
+        } catch ( e ) {
+          log.error e.message
+        }
+
+        imageFile.status = ImageFile.FileStatus.COMPLETE
+        updateImageFile( imageFile )
+
+        imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
       }
-
-      imageFile.status = ImageFile.FileStatus.COMPLETE
-      imageFileRepository.update( imageFile )
-
-      imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
     }
   }
 
   @EventListener
   void onStartup( ServerStartupEvent event ) {
-    if ( !stagerAddress?.endsWith( '/dataManager/addRaster' ) ) {
-      stagerUrl = new URL( "${ stagerAddress }/dataManager/addRaster" )
-    } else {
+    event
+    if ( stagerAddress?.endsWith( '/dataManager/addRaster' ) ) {
       stagerUrl = new URL( stagerAddress )
+
+    } else {
+      stagerUrl = new URL( "${ stagerAddress }/dataManager/addRaster" )
     }
 
     httpClient = HttpClient.create( new URL( stagerUrl.toString() - stagerUrl?.path ) )
