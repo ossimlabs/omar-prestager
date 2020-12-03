@@ -61,47 +61,26 @@ podTemplate(
         }
     }
 
-    stage("Load Variables")
-          {
-            withCredentials([string(credentialsId: 'o2-artifact-project', variable: 'o2ArtifactProject')]) {
-              step ([$class: "CopyArtifact",
-                projectName: o2ArtifactProject,
-                filter: "common-variables.groovy",
-                flatten: true])
-              }
-              load "common-variables.groovy"
+    stage("Load Variables"){
+      step([$class     : "CopyArtifact",
+            projectName: "gegd-dgcs-jenkins-artifacts",
+            filter     : "common-variables.groovy",
+            flatten    : true])
+      load "common-variables.groovy"
 
-            switch (BRANCH_NAME) {
-            case "master":
-              TAG_NAME = VERSION
-              break
-
-            case "dev":
-              TAG_NAME = "latest"
-              break
-
-            default:
-              TAG_NAME = BRANCH_NAME
-              break
-          }
-
-        DOCKER_PRIVATE_IMAGE_PATH = "${DOCKER_REGISTRY_PRIVATE_UPLOAD_URL}/omar-prestager"
-        DOCKER_PUBLIC_IMAGE_PATH = "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}/omar-prestager"
-
-        }
-        stage('SonarQube Analysis') {
-            nodejs(nodeJSInstallationName: "${NODEJS_VERSION}") {
-                def scannerHome = tool "${SONARQUBE_SCANNER_VERSION}"
-
-                withSonarQubeEnv('sonarqube'){
-                    sh """
-                        ${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=omar-prestager \
-                        -Dsonar.login=${SONARQUBE_TOKEN}
-                    """
-                }
-            }
-        }
+      switch (BRANCH_NAME) {
+        case "master":
+          TAG_NAME = VERSION
+          break
+        case "dev":
+          TAG_NAME = "latest"
+          break
+        default:
+          TAG_NAME = BRANCH_NAME
+          break
+      }
+      DOCKER_IMAGE_PATH = "${DOCKER_REGISTRY_PRIVATE_UPLOAD_URL}/omar-prestager"
+    }
 
     stage("Build & Deploy") {
       container('docker'){
@@ -110,36 +89,12 @@ podTemplate(
           script {
             sh 'apk add gradle'
             sh 'gradle jDB'
+            sh "docker tag nexus-docker-private-hosted.ossim.io/omar-prestager:latest ${DOCKER_IMAGE_PATH}:${TAG_NAME}"
+            sh "docker push ${DOCKER_IMAGE_PATH}:${TAG_NAME}"
             }
-          }
-        }
-      }
-    }
-    
-    stage("Push Docker Image") {
-      container('docker'){
-        withDockerRegistry(credentialsId: 'dockerCredentials', url: "https://${DOCKER_REGISTRY_PRIVATE_UPLOAD_URL}") {
-          script {
-            sh "docker tag nexus-docker-private-hosted.ossim.io/omar-prestager:latest ${DOCKER_PRIVATE_IMAGE_PATH}:${TAG_NAME}"
-            sh "docker push ${DOCKER_PRIVATE_IMAGE_PATH}:${TAG_NAME}"
-
-
             if (BRANCH_NAME == "master") {
-              sh  "docker tag ${DOCKER_PRIVATE_IMAGE_PATH}:${TAG_NAME} ${DOCKER_PRIVATE_IMAGE_PATH}:release"
-              sh  "docker push ${DOCKER_PRIVATE_IMAGE_PATH}:release"
-              }
-            }
-          }
-
-        withDockerRegistry(credentialsId: 'dockerCredentials', url: "https://${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}") {
-          script {
-              sh "docker tag nexus-docker-public-hosted.ossim.io/omar-prestager:latest ${DOCKER_PUBLIC_IMAGE_PATH}:${TAG_NAME}"
-              sh "docker push ${DOCKER_PUBLIC_IMAGE_PATH}:${TAG_NAME}"
-
-
-            if (BRANCH_NAME == "master") {
-              sh  "docker tag ${DOCKER_PUBLIC_IMAGE_PATH}:${TAG_NAME} ${DOCKER_PUBLIC_IMAGE_PATH}:release"
-              sh  "docker push ${DOCKER_PUBLIC_IMAGE_PATH}:release"
+              sh  "docker tag ${DOCKER_IMAGE_PATH}:${TAG_NAME} ${DOCKER_IMAGE_PATH}:release"
+              sh  "docker push ${DOCKER_IMAGE_PATH}:release"
             }
           }
         }
