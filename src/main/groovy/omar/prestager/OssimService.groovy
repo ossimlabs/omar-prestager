@@ -137,10 +137,12 @@ class OssimService {
 
   @EventListener
   void onStartup( ServerStartupEvent event ) {
-    if ( !stagerAddress?.endsWith( '/dataManager/addRaster' ) ) {
-      stagerUrl = new URL( "${ stagerAddress }/dataManager/addRaster" )
-    } else {
+    event
+    if ( stagerAddress?.endsWith( '/dataManager/addRaster' ) ) {
       stagerUrl = new URL( stagerAddress )
+
+    } else {
+      stagerUrl = new URL( "${ stagerAddress }/dataManager/addRaster" )
     }
 
     httpClient = HttpClient.create( new URL( stagerUrl.toString() - stagerUrl?.path ) )
