@@ -31,6 +31,7 @@ global:
     password: qKcSn=3G|3~54*gO
     port: 5432
 
+
   createIngress: true
   createImagePullSecret: true
   useImagePullSecret: true

@@ -4,11 +4,12 @@ import groovy.transform.CompileStatic
 import io.micronaut.data.annotation.GeneratedValue
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
-
+// import javax.persistence.Table
 import java.time.LocalDateTime
 
 @CompileStatic
 @MappedEntity
+// @Table(name="test-table")
 class ImageFile {
   static enum FileStatus {
     QUEUED,
