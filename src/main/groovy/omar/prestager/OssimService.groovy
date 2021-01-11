@@ -96,7 +96,7 @@ class OssimService {
       updateImageFile( imageFile )
 
       def processStatus = processFile( imageFile.filename as File )
-      info.log "processStaus = ${processStatus}"
+      log.info "processStaus = ${processStatus}"
       if (processStatus == 0) {
         imageFile.status = ImageFile.FileStatus.READY_TO_INDEX
         log.info "Status: ${imageFile.status}"
