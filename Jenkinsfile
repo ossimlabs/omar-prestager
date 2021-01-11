@@ -92,10 +92,6 @@ podTemplate(
             sh "docker tag nexus-docker-private-hosted.ossim.io/omar-prestager:latest ${DOCKER_IMAGE_PATH}:${TAG_NAME}"
             sh "docker push ${DOCKER_IMAGE_PATH}:${TAG_NAME}"
             }
-            if (BRANCH_NAME == "master") {
-              sh  "docker tag ${DOCKER_IMAGE_PATH}:${TAG_NAME} ${DOCKER_IMAGE_PATH}:release"
-              sh  "docker push ${DOCKER_IMAGE_PATH}:release"
-            }
           }
         }
       }

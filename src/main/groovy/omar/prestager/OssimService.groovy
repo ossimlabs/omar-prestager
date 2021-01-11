@@ -35,7 +35,7 @@ class OssimService {
     this.imageFileRepository = imageFileRepository
   }
 
-  String processFile( File file ) {
+  int processFile( File file ) {
     def workDir = new File( scratchDir, file.parent )
 
     workDir?.mkdirs()
@@ -82,6 +82,7 @@ class OssimService {
   ImageFile queueFile( ImageFile imageFile ) {
     imageFile.insertDate = LocalDateTime.now()
     imageFile.status = ImageFile.FileStatus.QUEUED
+    log.info "Status: ${imageFile.status}"
     imageFileRepository.save( imageFile )
   }
 
@@ -91,14 +92,17 @@ class OssimService {
 
     if ( imageFile ) {
       imageFile.status = ImageFile.FileStatus.STAGING
+      log.info "Status: ${imageFile.status}"
       updateImageFile( imageFile )
 
       def processStatus = processFile( imageFile.filename as File )
-      
+      info.log "processStaus = ${processStatus}"
       if (processStatus == 0) {
         imageFile.status = ImageFile.FileStatus.READY_TO_INDEX
+        log.info "Status: ${imageFile.status}"
       }else{
         imageFile.status = ImageFile.FileStatus.FAILED_HISTOGRAM
+        log.error "Status: ${imageFile.status}"
       }
       updateImageFile( imageFile )
     }
@@ -112,10 +116,11 @@ class OssimService {
   @Scheduled( cron = '${omar.prestager.index.cron}' )
   void indexImage() {
     ImageFile imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
-
+    log.info "Called indexImage"
     while ( imageFile ) {
       if (imageFile.status == ImageFile.FileStatus.READY_TO_INDEX){
         imageFile.status = ImageFile.FileStatus.INDEXING
+        log.info "Status: ${imageFile.status}"
         updateImageFile( imageFile )
 
         try {
@@ -128,6 +133,7 @@ class OssimService {
         }
 
         imageFile.status = ImageFile.FileStatus.COMPLETE
+        log.info "Status: ${imageFile.status}"
         updateImageFile( imageFile )
 
         imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
