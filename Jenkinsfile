@@ -49,7 +49,7 @@ podTemplate(
         scmVars = checkout(scm)
         GIT_BRANCH_NAME = scmVars.GIT_BRANCH
         BRANCH_NAME = """${sh(returnStdout: true, script: "echo ${GIT_BRANCH_NAME} | awk -F'/' '{print \$2}'").trim()}"""
-        VERSION = '0.9'
+        VERSION = '0.10'
         ARTIFACT_NAME = 'omar-prestager'
         GIT_TAG_NAME = ARTIFACT_NAME + "-" + VERSION
         script {            
