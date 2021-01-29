@@ -10,3 +10,17 @@ micronaut:
 #      uri: http://${OMAR_CONFIG_SERVER_SERVICE_HOST}:${OMAR_CONFIG_SERVER_SERVICE_PORT}/omar-config-server
 #      retry-attempts: 4 # optional, number of times to retry
 #      retry-delay: 2s # optional, delay between retries
+
+kubernetes:
+  client:
+    secure: true
+    secrets:
+      enabled: true
+    discovery:
+      enabled: true
+
+    config-maps:
+      enabled: true
+      watch: true
+      labels:
+        - app: omar-prestager 
