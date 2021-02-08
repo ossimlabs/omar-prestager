@@ -119,20 +119,19 @@ node(POD_LABEL){
 //         COMING SOON
 //     }
 
-//     SONARQUBE SCANS COMING SOON
-//     stage('SonarQube Analysis') {
-//         nodejs(nodeJSInstallationName: "${NODEJS_VERSION}") {
-//             def scannerHome = tool "${SONARQUBE_SCANNER_VERSION}"
-//
-//                 withSonarQubeEnv('sonarqube'){
-//                     sh """
-//                         ${scannerHome}/bin/sonar-scanner \
-//                         -Dsonar.projectKey=${APP_NAME} \
-//                         -Dsonar.login=${SONARQUBE_TOKEN}
-//                     """
-//             }
-//         }
-//     }
+    stage('SonarQube Analysis') {
+        nodejs(nodeJSInstallationName: "${NODEJS_VERSION}") {
+            def scannerHome = tool "${SONARQUBE_SCANNER_VERSION}"
+
+                withSonarQubeEnv('sonarqube'){
+                    sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=${APP_NAME} \
+                        -Dsonar.login=${SONARQUBE_TOKEN}
+                    """
+            }
+        }
+    }
 
     stage('Build') {
         container('builder') {
