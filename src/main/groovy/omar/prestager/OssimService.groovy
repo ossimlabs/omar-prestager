@@ -124,7 +124,6 @@ class OssimService {
     if ( imageFile ) {
       log.info "Inside if"
       if (imageFile.status == ImageFile.FileStatus.READY_TO_INDEX){
-        log.info
         imageFile.status = ImageFile.FileStatus.INDEXING
         log.info "Status: ${imageFile.status}"
         updateImageFile( imageFile )
