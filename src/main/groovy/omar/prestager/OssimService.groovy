@@ -123,7 +123,9 @@ class OssimService {
     log.info "${ImageFile.FileStatus.READY_TO_INDEX} - ${ImageFile.FileStatus.READY_TO_INDEX.class}"
     if ( imageFile ) {
       log.info "Inside if"
+      log.info "${ imageFile.status == ImageFile.FileStatus.READY_TO_INDEX }"
       if (imageFile.status == ImageFile.FileStatus.READY_TO_INDEX){
+        log.info "Inside ready to index"
         imageFile.status = ImageFile.FileStatus.INDEXING
         log.info "Status: ${imageFile.status}"
         updateImageFile( imageFile )
