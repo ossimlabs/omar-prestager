@@ -115,36 +115,27 @@ class OssimService {
 
   @Scheduled( cron = '${omar.prestager.index.cron}' )
   void indexImage() {
-    log.info "Cheese"
     ImageFile imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
-    log.info "${imageFile.properties}"
     log.info "Called indexImage"
-    log.info "${imageFile.status} - ${imageFile.status.class}"
-    log.info "${ImageFile.FileStatus.READY_TO_INDEX} - ${ImageFile.FileStatus.READY_TO_INDEX.class}"
-    if ( imageFile ) {
-      log.info "Inside if"
-      log.info "${ imageFile.status == ImageFile.FileStatus.READY_TO_INDEX }"
-      if (imageFile.status == ImageFile.FileStatus.READY_TO_INDEX){
-        log.info "Inside ready to index"
-        imageFile.status = ImageFile.FileStatus.INDEXING
-        log.info "Status: ${imageFile.status}"
-        updateImageFile( imageFile )
+    while ( imageFile ) {
+      imageFile.status = ImageFile.FileStatus.INDEXING
+      log.info "Status: ${imageFile.status}"
+      updateImageFile( imageFile )
 
-        try {
-          def response = httpClient?.toBlocking()?.exchange( HttpRequest.POST( stagerUrl?.path,
-              [ filename: imageFile?.filename ] ), String )
+      try {
+        def response = httpClient?.toBlocking()?.exchange( HttpRequest.POST( stagerUrl?.path,
+            [ filename: imageFile?.filename ] ), String )
 
-          log.info response?.body?.get()
-        } catch ( e ) {
-          log.error e.message
-        }
-
-        imageFile.status = ImageFile.FileStatus.COMPLETE
-        log.info "Status: ${imageFile.status}"
-        updateImageFile( imageFile )
-
-        imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
+        log.info response?.body?.get()
+      } catch ( e ) {
+        log.error e.message
       }
+
+      imageFile.status = ImageFile.FileStatus.COMPLETE
+      log.info "Status: ${imageFile.status}"
+      updateImageFile( imageFile )
+
+      imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
     }
   }
 
