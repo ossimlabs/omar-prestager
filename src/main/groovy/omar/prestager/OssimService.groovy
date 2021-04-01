@@ -117,9 +117,9 @@ class OssimService {
   void indexImage() {
     log.info "Cheese"
     ImageFile imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
-    log.info "${imageFile}"
+    log.info "${imageFile.properties}"
     log.info "Called indexImage"
-    while ( imageFile ) {
+    if ( imageFile ) {
       if (imageFile.status == ImageFile.FileStatus.READY_TO_INDEX){
         imageFile.status = ImageFile.FileStatus.INDEXING
         log.info "Status: ${imageFile.status}"
