@@ -118,26 +118,24 @@ class OssimService {
     ImageFile imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
     log.info "Called indexImage"
     while ( imageFile ) {
-      if (imageFile.status == ImageFile.FileStatus.READY_TO_INDEX){
-        imageFile.status = ImageFile.FileStatus.INDEXING
-        log.info "Status: ${imageFile.status}"
-        updateImageFile( imageFile )
+      imageFile.status = ImageFile.FileStatus.INDEXING
+      log.info "Status: ${imageFile.status}"
+      updateImageFile( imageFile )
 
-        try {
-          def response = httpClient?.toBlocking()?.exchange( HttpRequest.POST( stagerUrl?.path,
-              [ filename: imageFile?.filename ] ), String )
+      try {
+        def response = httpClient?.toBlocking()?.exchange( HttpRequest.POST( stagerUrl?.path,
+            [ filename: imageFile?.filename ] ), String )
 
-          log.info response?.body?.get()
-        } catch ( e ) {
-          log.error e.message
-        }
-
-        imageFile.status = ImageFile.FileStatus.COMPLETE
-        log.info "Status: ${imageFile.status}"
-        updateImageFile( imageFile )
-
-        imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
+        log.info response?.body?.get()
+      } catch ( e ) {
+        log.error e.message
       }
+
+      imageFile.status = ImageFile.FileStatus.COMPLETE
+      log.info "Status: ${imageFile.status}"
+      updateImageFile( imageFile )
+
+      imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
     }
   }
 
