@@ -119,8 +119,12 @@ class OssimService {
     ImageFile imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
     log.info "${imageFile.properties}"
     log.info "Called indexImage"
+    log.info "${imageFile.status} - ${imageFile.status.class}"
+    log.info "${ImageFile.FileStatus.READY_TO_INDEX} - ${ImageFile.FileStatus.READY_TO_INDEX.class}"
     if ( imageFile ) {
+      log.info "Inside if"
       if (imageFile.status == ImageFile.FileStatus.READY_TO_INDEX){
+        log.info
         imageFile.status = ImageFile.FileStatus.INDEXING
         log.info "Status: ${imageFile.status}"
         updateImageFile( imageFile )
