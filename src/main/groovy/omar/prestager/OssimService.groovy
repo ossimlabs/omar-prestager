@@ -115,7 +115,9 @@ class OssimService {
 
   @Scheduled( cron = '${omar.prestager.index.cron}' )
   void indexImage() {
+    log.info "Cheese"
     ImageFile imageFile = imageFileRepository.findByStatusEquals( ImageFile.FileStatus.READY_TO_INDEX.toString() ).orElse( null )
+    log.info "${imageFile}"
     log.info "Called indexImage"
     while ( imageFile ) {
       if (imageFile.status == ImageFile.FileStatus.READY_TO_INDEX){
