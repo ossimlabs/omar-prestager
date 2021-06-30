@@ -25,7 +25,7 @@ global:
     password: null
     port: null
 
-  createIngress: true
+  createIngress: false
   useTls: false
   useTLSClientAuth: false
   sslCertSecretName: null
@@ -40,11 +40,11 @@ global:
 
 image:
   name: omar-prestager
-  tag: null
+  tag: 1.1
   pullPolicy: null
 
 
-ingressPath: /omar-prestager
+path: /omar-prestager
 internalPort: 8080
 externalPort: 8080
 
