@@ -25,7 +25,7 @@ global:
     password: null
     port: null
 
-  createIngress: false
+  createIngress: true
   useTls: false
   useTLSClientAuth: false
   sslCertSecretName: null
@@ -72,5 +72,5 @@ resources:
 existingVolumes:
   scratch-volume:
     type: empty
-    mountPath: /scratch  
+    mountPath: /scratch
 
