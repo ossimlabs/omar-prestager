@@ -41,7 +41,7 @@ dependencies {
   implementation("io.micronaut:micronaut-management")
   implementation( "io.micronaut:micronaut-management" )
   developmentOnly( "io.micronaut:micronaut-runtime-osx:$micronautVersion" )
-  runtimeOnly( "ch.qos.logback:logback-classic" )
+  runtimeOnly( "ch.qos.logback:logback-classic:1.2.10" )
   runtimeOnly("org.postgresql:postgresql")
   testImplementation( enforcedPlatform( "io.micronaut:micronaut-bom:$micronautVersion" ) )
   testImplementation( "io.micronaut:micronaut-inject-groovy" )
@@ -51,6 +51,21 @@ dependencies {
   testImplementation( "io.micronaut.test:micronaut-test-spock" )
   testImplementation(platform("org.testcontainers:testcontainers-bom:1.14.3"))
   testRuntimeOnly("org.testcontainers:postgresql")
+  
+  constraints {
+      implementation('org.apache.logging.log4j:log4j-core:2.17.1') {
+        because 'Log4j vulnerable to remote code execution and other critical security vulnerabilities'
+      }
+      implementation('org.apache.logging.log4j:log4j-api:2.17.1') {
+        because 'Log4j vulnerable to remote code execution and other critical security vulnerabilities'
+      }
+      implementation('ch.qos.logback:logback-classic:1.2.10') {
+        because 'Logback vulnerable to remote code execution and other critical security vulnerabilities'
+      }
+      implementation('ch.qos.logback:logback-core:1.2.10') {
+        because 'Logback vulnerable to remote code execution and other critical security vulnerabilities'
+      }
+    }
 }
 
 test.classpath += configurations.developmentOnly
