@@ -24,7 +24,7 @@ datasources:
     driverClassName: org.postgresql.Driver
     username: ${omar.prestager.database.username}
     password: ${omar.prestager.database.password}
-#    schema-generate: CREATE_DROP
+    #    schema-generate: CREATE_DROP
     schema-generate: CREATE
     dialect: POSTGRES
 
@@ -34,11 +34,11 @@ omar:
       name: omardb-prestager
       username: postgres
       password: postgres
-      host: localhost
+      host: host.docker.internal
       port: 5432
     process:
       pollEvery: '1s'
     index:
-      stagerAddress:  http://host.docker.internal/omar-services
+      stagerAddress: http://host.docker.internal/omar-services
       cron: '* * * * *'
 

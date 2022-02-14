@@ -1,5 +1,9 @@
 #!/bin/sh
-for x in `find /System/Volumes/Data/ossim/epcot/*.NTF`; do
-    curl -X POST "http://localhost:8080/prestage/queueFile?filename=$x"
+
+IMAGE_DIR=$OSSIM_DATA/skysat-test/stitched
+URL=http://localhost:8888
+
+for x in `find $IMAGE_DIR -name "*.ntf" -o -name "*.tif"`; do
+    curl -X POST "$URL/prestage/queueFile?filename=$x"
     echo "";
 done

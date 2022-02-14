@@ -109,7 +109,7 @@ class OssimService {
   }
 
   @Transactional
-  private ImageFile updateImageFile( ImageFile imageFile ) {
+  ImageFile updateImageFile( ImageFile imageFile ) {
     imageFileRepository.update( imageFile )
   }
 

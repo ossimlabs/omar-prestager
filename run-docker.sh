@@ -1,3 +1,14 @@
-docker run -it --rm  -p 8888:8080 -v $OSSIM_DATA:$OSSIM_DATA -v $OSSIM_DATA:/data nexus-docker-public-hosted.ossim.io/omar-prestager:latest
-#docker run -it --rm  -p 8888:8080 -e JAVA_OPTIONS="-Dmicronaut.server.context-path=/omar-prestager" -v $OSSIM_DATA:$OSSIM_DATA -v $OSSIM_DATA:/data nexus-docker-public-hosted.ossim.io/omar-prestager:latest
+#!/bin/sh
+
+IMAGE_NAME=nexus-docker-private-hosted.ossim.io/omar-prestager
+IMAGE_VERSION=latest
+PORT_NUMBER=8888
+
+docker run -it --rm  \
+  -p $PORT_NUMBER:8080 \
+  -v $OSSIM_DATA:$OSSIM_DATA \
+  -v $OSSIM_DATA:/data \
+  $IMAGE_NAME:$IMAGE_VERSION
+
+
 
