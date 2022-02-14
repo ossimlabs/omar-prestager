@@ -1,4 +1,4 @@
-package omar.prestager
+package omar.prestager.controllers
 
 import groovy.transform.CompileStatic
 import io.micronaut.http.MediaType
@@ -9,7 +9,9 @@ import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.scheduling.annotation.ExecuteOn
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Operation
+import omar.prestager.domain.ImageFile
+import omar.prestager.services.OssimService;
 
 @CompileStatic
 @Controller( "/prestage" )
@@ -34,8 +36,7 @@ class PrestageController {
   String processFile( @QueryValue String filename ) {
     ossimService.processFile( new File( filename ) )
   }
-  
-  
+
   @ExecuteOn( TaskExecutors.IO )
   @Post( uri = "/queueFile", produces = MediaType.APPLICATION_JSON )
   @Operation(summary = "A provided file will be entered into the prestager queue.",
@@ -47,8 +48,7 @@ class PrestageController {
   @ApiResponse(responseCode = "200", description = "Jobs Done.")
   @ApiResponse(responseCode = "503", description = "Out to lunch.")
   @ApiResponse(responseCode = "417", description = "Garbage in, garbage out.")
-  ImageFile queueFile(  @QueryValue String filename  ) {
+  ImageFile queueFile( @QueryValue String filename  ) {
     ossimService.queueFile( new ImageFile(filename: filename) )
   }
-  
 }

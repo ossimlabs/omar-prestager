@@ -1,4 +1,4 @@
-package omar.prestager
+package omar.prestager.domain
 
 import io.micronaut.data.jdbc.annotation.JdbcRepository
 import io.micronaut.data.model.query.builder.sql.Dialect

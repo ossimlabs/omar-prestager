@@ -1,4 +1,4 @@
-package omar.prestager
+package omar.prestager.domain
 
 import groovy.transform.CompileStatic
 import io.micronaut.data.annotation.GeneratedValue

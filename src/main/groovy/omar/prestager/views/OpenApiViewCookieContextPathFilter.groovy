@@ -1,4 +1,4 @@
-package omar.prestager
+package omar.prestager.views
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.annotation.Value
@@ -27,6 +27,5 @@ class OpenApiViewCookieContextPathFilter implements HttpServerFilter {
   public Publisher<MutableHttpResponse<?>> doFilter( HttpRequest<?> request, ServerFilterChain chain ) {
     return Publishers.map( chain.proceed( request ), {response -> response.cookie( contextPathCookie ) } );
   }
-
 }
 

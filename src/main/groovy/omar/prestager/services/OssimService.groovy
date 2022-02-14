@@ -1,4 +1,4 @@
-package omar.prestager
+package omar.prestager.services
 
 import groovy.transform.CompileStatic
 import io.micronaut.context.annotation.Value
@@ -7,7 +7,8 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.event.annotation.EventListener
 import io.micronaut.runtime.server.event.ServerStartupEvent
 import io.micronaut.scheduling.annotation.Scheduled
-
+import omar.prestager.domain.ImageFile
+import omar.prestager.domain.ImageFileRepository
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 import org.slf4j.Logger
@@ -74,7 +75,6 @@ class OssimService {
 
     FileUtils.deleteDirectory( workDir )
 
-    results
     return exitCode
   }
 
@@ -141,7 +141,6 @@ class OssimService {
 
   @EventListener
   void onStartup( ServerStartupEvent event ) {
-    event
     if ( stagerAddress?.endsWith( '/dataManager/addRaster' ) ) {
       stagerUrl = new URL( stagerAddress )
 
@@ -152,6 +151,5 @@ class OssimService {
     httpClient = HttpClient.create( new URL( stagerUrl.toString() - stagerUrl?.path ) )
 
     log.info "stagerAddress = ${stagerAddress}"
-
   }
 }
