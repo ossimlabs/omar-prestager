@@ -1,17 +1,17 @@
 apiVersion: skaffold/v2beta7
 kind: Config
 metadata:
-  name: omar-prestager-test
+  name: omar-prestager
 build:
   artifacts:
-  - image: nexus-docker-public-hosted.ossim.io/omar-prestager-test
+  - image: nexus-docker-public-hosted.ossim.io/omar-prestager
     jib: {}
   tagPolicy:
     sha256: {}
 deploy:
   helm:
     releases:
-    - name: omar-prestager-test
+    - name: omar-prestager
       chartPath: chart
       valuesFiles:
         - chart/values-dev.yaml
@@ -20,4 +20,4 @@ deploy:
       # If you want to use an existing image rather than skaffold's
       # comment this out and specify the image in the values-dev.yaml
       artifactOverrides:
-        imageSkaffoldOverride: nexus-docker-public-hosted.ossim.io/omar-prestager-test       
+        imageSkaffoldOverride: nexus-docker-public-hosted.ossim.io/omar-prestager       

@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation
 import omar.prestager.domain.ImageFile
+import omar.prestager.domain.ImageZipFile
+import omar.prestager.services.IngestService
 import omar.prestager.services.OssimService;
 
 @CompileStatic
@@ -18,8 +20,11 @@ import omar.prestager.services.OssimService;
 class PrestageController {
   OssimService ossimService
 
-  PrestageController( OssimService ossimService ) {
+  IngestService ingestService
+
+  PrestageController( OssimService ossimService, IngestService ingestService ) {
     this.ossimService = ossimService
+    this.ingestService = ingestService
   }
 
   @ExecuteOn( TaskExecutors.IO )
@@ -50,5 +55,20 @@ class PrestageController {
   @ApiResponse(responseCode = "417", description = "Garbage in, garbage out.")
   ImageFile queueFile( @QueryValue String filename  ) {
     ossimService.queueFile( new ImageFile(filename: filename) )
+  }
+
+  @ExecuteOn( TaskExecutors.IO )
+  @Post( uri = "/queueZip", produces = MediaType.APPLICATION_JSON )
+  @Operation(summary = "A provided zip file will be entered into the prestager queue.",
+      description = " The zip file to sent to the prestager will have a entry created in the database and be flagged in the database table queue as 'QUEUED'."
+  )
+  @Tag(name = "queueZipFile")
+  @ApiResponse(responseCode = "400", description = "Invalid file supplied.")
+  @ApiResponse(responseCode = "404", description = "File not found.")
+  @ApiResponse(responseCode = "200", description = "Jobs Done.")
+  @ApiResponse(responseCode = "503", description = "Out to lunch.")
+  @ApiResponse(responseCode = "417", description = "Garbage in, garbage out.")
+  ImageZipFile queueZip( @QueryValue String filename  ) {
+    ingestService.queueZipFile( new ImageZipFile(filename: filename) )
   }
 }

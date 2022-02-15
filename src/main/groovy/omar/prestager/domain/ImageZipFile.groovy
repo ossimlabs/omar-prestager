@@ -8,10 +8,10 @@ import java.time.LocalDateTime
 
 @CompileStatic
 @MappedEntity
-class ImageFile {
+class ImageZipFile {
   static enum FileStatus {
     QUEUED,
-    STAGING,
+    UNZIPPING,
     READY_TO_INDEX,
     INDEXING,
     COMPLETE,

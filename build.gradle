@@ -10,6 +10,7 @@ version projectVersion
 group "omar.prestager"
 
 repositories {
+  maven { url "https://nexus.ossim.io/repository/all-repos" }
   mavenCentral()
 }
 
@@ -19,68 +20,60 @@ configurations {
 }
 
 
-
 dependencies {
-  constraints {
-    implementation('org.apache.logging.log4j:log4j-core:2.17.1') {
-      because 'Log4j vulnerable to remote code execution and other critical security vulnerabilities'
-    }
-    implementation('org.apache.logging.log4j:log4j-api:2.17.1') {
-      because 'Log4j vulnerable to remote code execution and other critical security vulnerabilities'
-    }
-    implementation('ch.qos.logback:logback-classic:1.2.10') {
-      because 'Logback vulnerable to remote code execution and other critical security vulnerabilities'
-    }
-    implementation('ch.qos.logback:logback-core:1.2.10') {
-      because 'Logback vulnerable to remote code execution and other critical security vulnerabilities'
-    }
-  }
+  implementation( 'org.codehaus.groovy:groovy-ant' )
 
   implementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
+  implementation group: 'org.codehaus.gpars', name: 'gpars', version: '1.2.1'
+
+  implementation( 'org.geoscript:geoscript-groovy:1.17.0' ) {
+    exclude module: 'gt-swing'
+    exclude module: 'slf4j-log4j12'
+  }
 
   compileOnly( platform( "io.micronaut:micronaut-bom:$micronautVersion" ) )
   compileOnly( "io.micronaut:micronaut-inject-groovy" )
-  compileOnly("io.micronaut.data:micronaut-data-processor")
-  compileOnly("io.micronaut.openapi:micronaut-openapi")
+  compileOnly( "io.micronaut.data:micronaut-data-processor" )
+  compileOnly( "io.micronaut.openapi:micronaut-openapi" )
   implementation( platform( "io.micronaut:micronaut-bom:$micronautVersion" ) )
   implementation( "io.micronaut:micronaut-inject" )
   implementation( "io.micronaut:micronaut-validation" )
   implementation( "io.micronaut.groovy:micronaut-runtime-groovy" )
   implementation( "io.micronaut:micronaut-http-server-netty" )
   implementation( "io.micronaut:micronaut-http-client" )
-  implementation("io.micronaut:micronaut-management")
-  implementation("io.micronaut.kubernetes:micronaut-kubernetes-discovery-client")
-  implementation("io.micronaut.sql:micronaut-jdbc-hikari")
-  implementation("io.micronaut.data:micronaut-data-jdbc")
-  implementation("io.swagger.core.v3:swagger-annotations")
-  implementation("io.micronaut:micronaut-management")
+  implementation( "io.micronaut:micronaut-management" )
+  implementation( "io.micronaut.kubernetes:micronaut-kubernetes-discovery-client" )
+  implementation( "io.micronaut.sql:micronaut-jdbc-hikari" )
+  implementation( "io.micronaut.data:micronaut-data-jdbc" )
+  implementation( "io.swagger.core.v3:swagger-annotations" )
+  implementation( "io.micronaut:micronaut-management" )
   implementation( "io.micronaut:micronaut-management" )
   developmentOnly( "io.micronaut:micronaut-runtime-osx:$micronautVersion" )
   runtimeOnly( "ch.qos.logback:logback-classic:1.2.10" )
-  runtimeOnly("org.postgresql:postgresql")
+  runtimeOnly( "org.postgresql:postgresql" )
   testImplementation( enforcedPlatform( "io.micronaut:micronaut-bom:$micronautVersion" ) )
   testImplementation( "io.micronaut:micronaut-inject-groovy" )
   testImplementation( "org.spockframework:spock-core" ) {
     exclude group: "org.codehaus.groovy", module: "groovy-all"
   }
   testImplementation( "io.micronaut.test:micronaut-test-spock" )
-  testImplementation(platform("org.testcontainers:testcontainers-bom:1.14.3"))
-  testRuntimeOnly("org.testcontainers:postgresql")
-  
+  testImplementation( platform( "org.testcontainers:testcontainers-bom:1.14.3" ) )
+  testRuntimeOnly( "org.testcontainers:postgresql" )
+
   constraints {
-      implementation('org.apache.logging.log4j:log4j-core:2.17.1') {
-        because 'Log4j vulnerable to remote code execution and other critical security vulnerabilities'
-      }
-      implementation('org.apache.logging.log4j:log4j-api:2.17.1') {
-        because 'Log4j vulnerable to remote code execution and other critical security vulnerabilities'
-      }
-      implementation('ch.qos.logback:logback-classic:1.2.10') {
-        because 'Logback vulnerable to remote code execution and other critical security vulnerabilities'
-      }
-      implementation('ch.qos.logback:logback-core:1.2.10') {
-        because 'Logback vulnerable to remote code execution and other critical security vulnerabilities'
-      }
+    implementation( 'org.apache.logging.log4j:log4j-core:2.17.1' ) {
+      because 'Log4j vulnerable to remote code execution and other critical security vulnerabilities'
     }
+    implementation( 'org.apache.logging.log4j:log4j-api:2.17.1' ) {
+      because 'Log4j vulnerable to remote code execution and other critical security vulnerabilities'
+    }
+    implementation( 'ch.qos.logback:logback-classic:1.2.10' ) {
+      because 'Logback vulnerable to remote code execution and other critical security vulnerabilities'
+    }
+    implementation( 'ch.qos.logback:logback-core:1.2.10' ) {
+      because 'Logback vulnerable to remote code execution and other critical security vulnerabilities'
+    }
+  }
 }
 
 test.classpath += configurations.developmentOnly
@@ -99,7 +92,7 @@ java {
 
 tasks.withType( GroovyCompile ) {
   groovyOptions.forkOptions.jvmArgs.add( '-Dgroovy.parameters=true' )
-  groovyOptions.forkOptions.jvmArgs.add('-Dmicronaut.openapi.views.spec=redoc.enabled=true,rapidoc.enabled=true,swagger-ui.enabled=true,swagger-ui.theme=flattop')
+  groovyOptions.forkOptions.jvmArgs.add( '-Dmicronaut.openapi.views.spec=redoc.enabled=true,rapidoc.enabled=true,swagger-ui.enabled=true,swagger-ui.theme=flattop' )
 }
 
 
@@ -128,11 +121,11 @@ jib {
   extraDirectories {
     paths {
       path {
-        from = file('src/main/jib')
+        from = file( 'src/main/jib' )
         into = "/app"
       }
       path {
-        from = file('src/main/jib')
+        from = file( 'src/main/jib' )
         into = "/app"
       }
     }
@@ -148,9 +141,9 @@ jib {
         JAVA_CLASSPATH: '/app/classpath/*:/app/libs/*',
         JAVA_OPTIONS: '-server -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -XshowSettings:vm -XX:+UseStringDeduplication '
     ]
-    ports = ['8080']
+    ports = [ '8080' ]
     creationTime = 'USE_CURRENT_TIMESTAMP'
-    entrypoint = ['/app/run_java.sh']
+    entrypoint = [ '/app/run_java.sh' ]
   }
 }
 
