@@ -19,9 +19,9 @@ class RestUtil {
     String results
 
     try {
-      URL url = "http://localhost".toURL()
+      URL url = "http://${System.getenv('OMAR_STAGER_APP_SERVICE_HOST')}:${System.getenv('OMAR_STAGER_APP_SERVICE_PORT')}".toURL()
       HttpClient client = HttpClient.create( url )
-      HttpRequest request = HttpRequest.create( HttpMethod.POST, "/omar-services/dataManager/addRaster" )
+      HttpRequest request = HttpRequest.create( HttpMethod.POST, "/omar-stager/dataManager/addRaster" )
 
       request.parameters.add( "filename", imageFile?.absolutePath )
       results = client.toBlocking().retrieve( request, String.class )

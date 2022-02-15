@@ -11,7 +11,7 @@ replicas: 1
 appName: omar-prestager
 
 global:
-  dockerRepository: nexus-docker-public-hosted.ossim.io
+  dockerRepository: nexus-docker-private-hosted.ossim.io
   imagePullSecret:
     registry: null
     username: null

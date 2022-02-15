@@ -54,6 +54,7 @@ class IngestService {
     imageZipFileRepository.save( imageZipFile )
   }
 
+  @CompileDynamic
   @Scheduled( fixedRate = '${omar.prestager.process.pollEvery}' )
   void findWork() {
     ImageZipFile imageZipFile = imageZipFileRepository.findByStatusEquals(
@@ -64,22 +65,49 @@ class IngestService {
       updateImageZipFile( imageZipFile )
       log.info "Status: ${ imageZipFile.status }"
 
-//      def processStatus = processFile( imageZipFile.filename as File )
-//      log.info "processStaus = ${ processStatus }"
-//      if ( processStatus == 0 ) {
-//        imageZipFile.status = ImageFile.FileStatus.READY_TO_INDEX
-//        log.info "Status: ${ imageZipFile.status }"
-//      } else {
-//        imageZipFile.status = ImageFile.FileStatus.FAILED_HISTOGRAM
-//        log.error "Status: ${ imageZipFile.status }"
-//      }
-
-      
-      String baseDir = "${ System.getenv( 'OSSIM_DATA' ) }/omar-ingest"
+      String baseDir = "/3pa-skysat"
       File archiveDir = "${ baseDir }/archive" as File
       long start = System.currentTimeMillis()
 
-      zipUtil.unzipFile( imageZipFile.filename as File, archiveDir )
+      imageZipFile.status = ImageZipFile.FileStatus.PROCESSING_IMAGES
+      updateImageZipFile( imageZipFile )
+      log.info "Status: ${ imageZipFile.status }"
+
+      File imageDir = zipUtil.unzipFile( imageZipFile.filename as File, archiveDir )
+      List<File> ntfFiles = [ ]
+
+      imageDir.eachFileMatch( ~/.*ntf/ ) { File ntfFile -> ntfFiles << ntfFile }
+
+      withPool {
+        ntfFiles.eachParallel { ntfFile ->
+          File omdFile = "${ FilenameUtils.removeExtension( ntfFile.absolutePath ) }.omd" as File
+
+          ossimUtil?.createOverviews( ntfFile )
+
+          File thumbnail = ossimUtil?.createThumbnail( ntfFile )
+
+          gdalUtil?.setNullValues( thumbnail )
+
+          File mask = gdalUtil?.createMask( thumbnail )
+          File shpFile = gdalUtil?.createShapeFile( mask )
+
+          def layer = new Shapefile( shpFile )
+
+          def geom = new MultiPolygon(
+              Geometry.cascadedUnion( layer.collectFromFeature { Feature f -> f?.geom } )?.simplify( 0.01 )
+          )
+
+
+          thumbnail.delete()
+
+          omdFile.withWriter { out ->
+            out.println "mission_id: SkySat"
+            out.println "ground_geom_0: ${ geom }"
+          }
+
+          restUtil?.postToAddRaster( ntfFile )
+        }
+      }
 
       long stop = System.currentTimeMillis()
 

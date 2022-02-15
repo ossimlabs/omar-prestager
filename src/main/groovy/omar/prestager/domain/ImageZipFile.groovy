@@ -12,10 +12,8 @@ class ImageZipFile {
   static enum FileStatus {
     QUEUED,
     UNZIPPING,
-    READY_TO_INDEX,
-    INDEXING,
-    COMPLETE,
-    FAILED_HISTOGRAM
+    PROCESSING_IMAGES,
+    COMPLETE
   }
 
   @Id
