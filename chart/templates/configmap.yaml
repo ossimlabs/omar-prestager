@@ -5,7 +5,7 @@ metadata:
   labels:
     app: "{{ .Values.appName }}"
 data:
-  application.yml: |- 
+  application.yml: |-
     omar:
       prestager:
         database:
@@ -13,12 +13,12 @@ data:
           username: {{ .Values.global.omarDb.user }}
           password: {{ .Values.global.omarDb.password }}
           host: {{ .Values.global.omarDb.host }}
-          port: {{ .Values.global.omarDb.port }} 
+          port: {{ .Values.global.omarDb.port }}
         process:
-          pollEvery: '1s'                  
+          pollEvery: '1s'
         index:
           stagerAddress: http://${OMAR_STAGER_APP_SERVICE_HOST}:${OMAR_STAGER_APP_SERVICE_PORT}/omar-stager
-          cron: '* * * * *' 
+          cron: '* * * * *'
     datasources:
       default:
         url: jdbc:postgresql://{{ .Values.global.omarDb.host }}/{{ .Values.global.omarDb.name }}
@@ -26,4 +26,4 @@ data:
         username: {{ .Values.global.omarDb.user }}
         password: {{ .Values.global.omarDb.password }}
         schema-generate: CREATE
-        dialect: POSTGRES        
+        dialect: POSTGRES
