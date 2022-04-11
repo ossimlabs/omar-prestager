@@ -42,6 +42,9 @@ global:
   createPVs: true
   useSpringConfigServer: false
 
+  deployment:
+    annotations: {}
+
 image:
   name: omar-prestager
   tag: null
@@ -84,3 +87,5 @@ existingVolumes:
     type: empty
     mountPath: /scratch
 
+deployment:
+  annotations: {}
