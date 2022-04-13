@@ -45,6 +45,11 @@ global:
   deployment:
     annotations: {}
 
+  serviceAccount:
+    enabled: null
+    annotations: {}
+    # name:
+
 image:
   name: omar-prestager
   tag: null
@@ -89,3 +94,12 @@ existingVolumes:
 
 deployment:
   annotations: {}
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  enabled: null
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and enabled is true, a name is generated using the fullname template
+  # name:

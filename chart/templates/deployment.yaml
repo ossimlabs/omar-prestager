@@ -25,7 +25,7 @@ spec:
           {{- if .Values.imageSkaffoldOverride }}
           image: {{ .Values.imageSkaffoldOverride }}
           {{- else }}
-          image: {{ include "helm-base.image" . | quote }}
+          image: {{ include "omar-prestager.image" . | quote }}
           {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           livenessProbe:
@@ -67,6 +67,7 @@ spec:
         {{- end }}
       restartPolicy: Always
       securityContext: {}
+      serviceAccountName: {{ include "omar-prestager.serviceAccount.name" . }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       volumes:
 {{- include "omar-prestager.volumes" . | indent 8 }}
