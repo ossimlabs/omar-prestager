@@ -8,7 +8,7 @@
 
 replicas: 1
 
-appName: omar-prestager
+fullnameOverride: omar-prestager
 
 global:
   dockerRepository: nexus-docker-public-hosted.ossim.io
