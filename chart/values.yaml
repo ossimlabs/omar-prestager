@@ -50,6 +50,8 @@ global:
     annotations: {}
     # name:
 
+  envVars: {}
+
 image:
   name: omar-prestager
   tag: null
