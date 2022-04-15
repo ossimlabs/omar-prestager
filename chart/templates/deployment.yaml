@@ -1,26 +1,31 @@
+{{- $annotations := merge .Values.deployment.annotations $.Values.global.deployment.annotations -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels: {}
-  name: {{ .Values.appName }}
+  name: {{ .Values.fullnameOverride }}
+  annotations:
+  {{- range $key, $value := $annotations }}
+    {{- $key | nindent 4 }}: {{ tpl $value $ | quote }}
+  {{- end }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.appName }}
+      app: {{ .Values.fullnameOverride }}
   template:
     metadata:
       labels:
-        app: {{ .Values.appName }}
+        app: {{ .Values.fullnameOverride }}
     spec:
       containers:
-        - name:  {{ .Values.appName }}
+        - name:  {{ .Values.fullnameOverride }}
           env:
           {{- include "omar-prestager.envVars" . | indent 8 }}
           {{- if .Values.imageSkaffoldOverride }}
           image: {{ .Values.imageSkaffoldOverride }}
           {{- else }}
-          image: "{{ .Values.global.dockerRepository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          image: {{ include "omar-prestager.image" . | quote }}
           {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           livenessProbe:
@@ -52,16 +57,17 @@ spec:
               memory: {{ .Values.resources.limits.memory }}
             requests:
               cpu: {{ .Values.resources.requests.cpu }}
-              memory: {{ .Values.resources.requests.memory }}              
+              memory: {{ .Values.resources.requests.memory }}
           volumeMounts:
 {{- include "omar-prestager.volumeMounts" . | indent 12 }}
       dnsPolicy: ClusterFirst
         {{- if .Values.global.useImagePullSecret }}
       imagePullSecrets:
-        - name: {{ .Values.appName }}-pull-secret
+        - name: {{ .Values.fullnameOverride }}-pull-secret
         {{- end }}
       restartPolicy: Always
       securityContext: {}
+      serviceAccountName: {{ include "omar-prestager.serviceAccount.name" . }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       volumes:
 {{- include "omar-prestager.volumes" . | indent 8 }}
